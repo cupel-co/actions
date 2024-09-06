@@ -1,0 +1,21 @@
+name: 'Release'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-version:
+    name: Generate Version
+    runs-on: ubuntu-latest
+    outputs:
+      sem-ver: ${{ steps.get-version.outputs.semVer }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Generate version
+        uses: ../../version/generate@main

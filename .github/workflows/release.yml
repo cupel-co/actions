@@ -1,0 +1,71 @@
+name: 'Release'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-version:
+    name: Generate Version
+    runs-on: ubuntu-latest
+    outputs:
+      sem-ver: ${{ steps.get-version.outputs.semVer }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Generate version
+        id: get-version
+        uses: ./version/generate
+  
+  production:
+    name: Production
+    runs-on: ubuntu-latest
+    needs:
+      - generate-version
+    env:
+      tag: v${{ needs.generate-version.outputs.sem-ver }}
+    environment: Production
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GH_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}
+          git_user_signingkey: true
+          git_tag_gpgsign: true
+      - name: Create and push tag
+        run: |
+          git tag -s ${{ env.tag }} -m "${{ env.tag }}"
+          git push origin tag ${{ env.tag }}
+      - name: Generate changelog
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ env.tag }}
+          writeToFile: false
+          includeInvalidCommits: true
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: "${{ steps.changelog.outputs.changes }}"
+          tag_name: ${{ env.tag }}
+          make_latest: true
+      - name: Notify Google Chat
+        if: ${{ always() }}
+        uses: SimonScholz/google-chat-action@main
+        with:
+          webhookUrl: '${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}'
+          title: Deploy to Production
+          subtitle: ${{ github.event.head_commit.message }}

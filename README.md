@@ -1,2 +1,2 @@
-# actions
-Actions for GitHub action
+# Actions
+A collection of reusable GitHub actions

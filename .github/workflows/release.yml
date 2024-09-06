@@ -18,4 +18,4 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Generate version
-        uses: ../../version/generate@main
+        uses: ./version/generate

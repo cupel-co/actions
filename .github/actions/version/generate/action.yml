@@ -1,0 +1,94 @@
+name: Generate Semantic Version
+description: Generate Semantic Version
+
+outputs:
+  major:
+    description: 'The Major value'
+    value: ${{ steps.generate.outputs.major }}
+  minor:
+    description: 'The Minor value'
+    value: ${{ steps.generate.outputs.minor }}
+  patch:
+    description: 'The Patch value'
+    value: ${{ steps.generate.outputs.patch }}
+  pre-release-tag:
+    description: 'The prerelease tag value'
+    value: ${{ steps.generate.outputs.preReleaseTag }}
+  pre-release-tag-with-dash :
+    description: 'The prerelease tag with dash value'
+    value: ${{ steps.generate.outputs.preReleaseTagWithDash }}
+  pre-release-label:
+    description: 'The prerelease lable value'
+    value: ${{ steps.generate.outputs.preReleaseLabel }}
+  pre-release-number:
+    description: 'The prerelease number value'
+    value: ${{ steps.generate.outputs.preReleaseNumber }}
+  weighted-pre-release-number:
+    description: 'The weighted prerelease number value'
+    value: ${{ steps.generate.outputs.weightedPreReleaseNumber }}
+  build-meta-data:
+    description: 'The build metadata value'
+    value: ${{ steps.generate.outputs.buildMetaData }}
+  full-build-meta-data:
+    description: 'The full build metadata value'
+    value: ${{ steps.generate.outputs.full-buildMetaData }}
+  major-minor-patch:
+    description: 'The major minor patch value'
+    value: ${{ steps.generate.outputs.majorMinorPatch }}
+  sem-ver:
+    description: 'The semantic version value'
+    value: ${{ steps.generate.outputs.semVer }}
+  assembly-sem-ver:
+    description: 'The assembly semantic version value'
+    value: ${{ steps.generate.outputs.assemblySemVer }}
+  assembly-sem-file-ver:
+    description: 'The file assembly semantic version value'
+    value: ${{ steps.generate.outputs.assemblySemFileVer }}
+  full-sem-ver:
+    description: 'The full semantic version value'
+    value: ${{ steps.generate.outputs.fullSemVer }}
+  informational-version:
+    description: 'The informational version value'
+    value: ${{ steps.generate.outputs.informationalVersion }}
+  branch-name:
+    description: 'The branch name value'
+    value: ${{ steps.generate.outputs.branchName }}
+  escaped-branch-name:
+    description: 'The escaped branch name value'
+    value: ${{ steps.generate.outputs.escapedBranchName }}
+  sha:
+    description: 'The sha value'
+    value: ${{ steps.generate.outputs.sha }}
+  short-sha:
+    description: 'The short sha value'
+    value: ${{ steps.generate.outputs.shortSha }}
+  version-source-sha:
+    description: 'The version source sha value'
+    value: ${{ steps.generate.outputs.versionSourceSha }}
+  commits-since-version-source:
+    description: 'The commits since version source value'
+    value: ${{ steps.generate.outputs.commitsSinceVersionSource }}
+  uncommitted-changes:
+    description: 'The uncommitted changes value'
+    value: ${{ steps.generate.outputs.uncommittedChanges }}
+  commit-date:
+    description: 'The commit date value'
+    value: ${{ steps.generate.outputs.commitDate }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install
+      uses: gittools/actions/gitversion/setup@v1.1.1
+      with:
+        versionSpec: '5.x'
+    - name: Generate
+      id: generate
+      uses: gittools/actions/gitversion/execute@v1.1.1
+      with:
+        targetPath: ./
+        disableCache: true
+        useConfigFile: true
+        configFilePath: GitVersion.yml
+      env:
+        BUILD_NUMBER: ${{ github.run_number }}

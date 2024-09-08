@@ -34,7 +34,7 @@ outputs:
     value: ${{ steps.get-version.outputs.fullBuildMetaData }}
   majorMinorPatch:
     description: 'The MajorMinorPatch value'
-    value: ${{ steps.get-version.outputs.majorMinorPatch }}
+    value: ${{ steps.generate.outputs.majorMinorPatch }}
   semVer:
     description: 'The SemVer value'
     value: ${{ steps.get-version.outputs.semVer }}

@@ -1,79 +1,79 @@
 name: Generate Semantic Version
 description: Generate Semantic Version
-    
+
 outputs:
   major:
     description: 'The Major value'
-    value: ${{ steps.generate.outputs.major }}
+    value: ${{ steps.generate-version.outputs.major }}
   minor:
     description: 'The Minor value'
-    value: ${{ steps.generate.outputs.minor }}
+    value: ${{ steps.generate-version.outputs.minor }}
   patch:
     description: 'The Patch value'
-    value: ${{ steps.generate.outputs.patch }}
-  preReleaseTag:
-    description: 'The PreReleaseTag value'
-    value: ${{ steps.generate.outputs.preReleaseTag }}
-  preReleaseTagWithDash:
-    description: 'The PreReleaseTagWithDash value'
-    value: ${{ steps.generate.outputs.preReleaseTagWithDash }}
-  preReleaseLabel:
-    description: 'The PreReleaseLabel value'
-    value: ${{ steps.generate.outputs.preReleaseLabel }}
-  preReleaseNumber:
-    description: 'The PreReleaseNumber value'
-    value: ${{ steps.generate.outputs.preReleaseNumber }}
-  weightedPreReleaseNumber:
-    description: 'The WeightedPreReleaseNumber value'
-    value: ${{ steps.generate.outputs.weightedPreReleaseNumber }}
-  buildMetaData:
-    description: 'The BuildMetaData value'
-    value: ${{ steps.generate.outputs.buildMetaData }}
-  fullBuildMetaData:
-    description: 'The FullBuildMetaData value'
-    value: ${{ steps.generate.outputs.fullBuildMetaData }}
-  majorMinorPatch:
-    description: 'The MajorMinorPatch value'
-    value: ${{ steps.generate.outputs.majorMinorPatch }}
-  semVer:
-    description: 'The SemVer value'
-    value: ${{ steps.generate.outputs.semVer }}
-  assemblySemVer:
-    description: 'The AssemblySemVer value'
-    value: ${{ steps.generate.outputs.assemblySemVer }}
-  assemblySemFileVer:
-    description: 'The AssemblySemFileVer value'
-    value: ${{ steps.generate.outputs.assemblySemFileVer }}
-  fullSemVer:
-    description: 'The FullSemVer value'
-    value: ${{ steps.generate.outputs.fullSemVer }}
-  informationalVersion:
-    description: 'The InformationalVersion value'
-    value: ${{ steps.generate.outputs.informationalVersion }}
-  branchName:
-    description: 'The BranchName value'
-    value: ${{ steps.generate.outputs.branchName }}
-  escapedBranchName:
-    description: 'The EscapedBranchName value'
-    value: ${{ steps.generate.outputs.escapedBranchName }}
+    value: ${{ steps.generate-version.outputs.patch }}
+  pre-release-tag:
+    description: 'The prerelease tag value'
+    value: ${{ steps.generate-version.outputs.pre-release-tag }}
+  pre-release-tag-with-dash :
+    description: 'The prerelease tag with dash value'
+    value: ${{ steps.generate-version.outputs.pre-release-tag-with-dash }}
+  pre-release-label:
+    description: 'The prerelease lable value'
+    value: ${{ steps.generate-version.outputs.pre-release-label }}
+  pre-release-number:
+    description: 'The prerelease number value'
+    value: ${{ steps.generate-version.outputs.pre-release-number }}
+  weighted-pre-release-number:
+    description: 'The weighted prerelease number value'
+    value: ${{ steps.generate-version.outputs.weighted-pre-release-number }}
+  build-meta-data:
+    description: 'The build metadata value'
+    value: ${{ steps.generate-version.outputs.build-meta-data }}
+  full-build-meta-data:
+    description: 'The full build metadata value'
+    value: ${{ steps.generate-version.outputs.full-build-meta-data }}
+  major-minor-patch:
+    description: 'The major minor patch value'
+    value: ${{ steps.generate-version.outputs.major-minor-patch }}
+  sem-ver:
+    description: 'The semantic version value'
+    value: ${{ steps.generate-version.outputs.sem-ver }}
+  assembly-sem-ver:
+    description: 'The assembly semantic version value'
+    value: ${{ steps.generate-version.outputs.assembly-sem-ver }}
+  assembly-sem-file-ver:
+    description: 'The file assembly semantic version value'
+    value: ${{ steps.generate-version.outputs.assembly-sem-file-ver }}
+  full-sem-ver:
+    description: 'The full semantic version value'
+    value: ${{ steps.generate-version.outputs.full-sem-ver }}
+  informational-version:
+    description: 'The informational version value'
+    value: ${{ steps.generate-version.outputs.informational-version }}
+  branch-name:
+    description: 'The branch name value'
+    value: ${{ steps.generate-version.outputs.branch-nam }}
+  escaped-branch-name:
+    description: 'The escaped branch name value'
+    value: ${{ steps.generate-version.outputs.escaped-branch-name }}
   sha:
-    description: 'The Sha value'
-    value: ${{ steps.generate.outputs.sha }}
-  shortSha:
-    description: 'The ShortSha value'
-    value: ${{ steps.generate.outputs.shortSha }}
-  versionSourceSha:
-    description: 'The VersionSourceSha value'
-    value: ${{ steps.generate.outputs.versionSourceSha }}
-  commitsSinceVersionSource:
-    description: 'The CommitsSinceVersionSource value'
-    value: ${{ steps.generate.outputs.commitsSinceVersionSource }}
-  uncommittedChanges:
-    description: 'The UncommittedChanges value'
-    value: ${{ steps.generate.outputs.uncommittedChanges }}
-  commitDate:
-    description: 'The CommitDate value'
-    value: ${{ steps.generate.outputs.commitDate }}
+    description: 'The sha value'
+    value: ${{ steps.generate-version.outputs.sha }}
+  short-sha:
+    description: 'The short sha value'
+    value: ${{ steps.generate-version.outputs.short-sha }}
+  version-source-sha:
+    description: 'The version source sha value'
+    value: ${{ steps.generate-version.outputs.version-source-sha }}
+  commits-since-version-source:
+    description: 'The commits since version source value'
+    value: ${{ steps.generate-version.outputs.commits-since-version-source }}
+  uncommitted-changes:
+    description: 'The uncommitted changes value'
+    value: ${{ steps.generate-version.outputs.uncommitted-changes }}
+  commit-date:
+    description: 'The commit date value'
+    value: ${{ steps.generate-version.outputs.commit-date }}
 
 runs:
   using: composite

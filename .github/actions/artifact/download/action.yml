@@ -1,16 +1,16 @@
-name: 'Download Tar Artifact'
-description: 'Download and extract a tar artifact that was previously uploaded in the workflow by the upload-tartifact action'
+name: Download Tar Artifact
+description: Download and extract a tar artifact that was previously uploaded in the workflow by the upload-tartifact action
 
 inputs:
   name:
-    description: 'Artifact name'
+    description: Artifact name
     required: false
   path:
-    description: 'Destination path'
+    description: Destination path
     required: false
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - uses: actions/download-artifact@v4
       with:

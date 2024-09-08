@@ -1,4 +1,4 @@
-# OpenTofu Plan
+# Upload Tar Artifact
 Action: [upload](./action.yml)
 
 The Upload Tar Artifact action compresses specified files or directories into a .tar archive and uploads the artifact, ensuring that file permissions are preserved. This is useful when file privileges need to remain intact across different environments or workflows. The action also allows specifying the artifact name, overwrite settings, and retention days.
@@ -14,16 +14,15 @@ The Upload Tar Artifact action compresses specified files or directories into a 
 ## Example
 ```yaml
 jobs:
-  generate-version:
-    name: Generate Version
+  upload-artifact:
+    name: Upload Artifact 
     runs-on: ubuntu-latest
     steps:
-      - name: Publish ${{ inputs.artifact-name }}
-        if: ${{ inputs.artifact-name != '' }}
-        uses: cupel-co/actions/artifact/upload@v0.5.0
+      - name: Publish artifact
+        uses: cupel-co/actions/.github/actions/artifact/upload@vX.X.X
         with:
-          name: ${{ inputs.artifact-name }}
+          name: artifact
           overwrite: true
-          path: ${{ inputs.working-directory }}
+          path: ./
           retention-days: 1
 ```

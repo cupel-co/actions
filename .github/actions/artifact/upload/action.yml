@@ -21,7 +21,7 @@ inputs:
     required: false
 
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - run: |
         shopt -s globstar

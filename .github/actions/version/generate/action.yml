@@ -4,87 +4,86 @@ description: Generate Semantic Version
 outputs:
   major:
     description: 'The Major value'
-    value: ${{ steps.get-version.outputs.major }}
+    value: ${{ steps.generate.outputs.major }}
   minor:
     description: 'The Minor value'
-    value: ${{ steps.get-version.outputs.minor }}
+    value: ${{ steps.generate.outputs.minor }}
   patch:
     description: 'The Patch value'
-    value: ${{ steps.get-version.outputs.patch }}
+    value: ${{ steps.generate.outputs.patch }}
   preReleaseTag:
     description: 'The PreReleaseTag value'
-    value: ${{ steps.get-version.outputs.preReleaseTag }}
+    value: ${{ steps.generate.outputs.preReleaseTag }}
   preReleaseTagWithDash:
     description: 'The PreReleaseTagWithDash value'
-    value: ${{ steps.get-version.outputs.preReleaseTagWithDash }}
+    value: ${{ steps.generate.outputs.preReleaseTagWithDash }}
   preReleaseLabel:
     description: 'The PreReleaseLabel value'
-    value: ${{ steps.get-version.outputs.preReleaseLabel }}
+    value: ${{ steps.generate.outputs.preReleaseLabel }}
   preReleaseNumber:
     description: 'The PreReleaseNumber value'
-    value: ${{ steps.get-version.outputs.preReleaseNumber }}
+    value: ${{ steps.generate.outputs.preReleaseNumber }}
   weightedPreReleaseNumber:
     description: 'The WeightedPreReleaseNumber value'
-    value: ${{ steps.get-version.outputs.weightedPreReleaseNumber }}
+    value: ${{ steps.generate.outputs.weightedPreReleaseNumber }}
   buildMetaData:
     description: 'The BuildMetaData value'
-    value: ${{ steps.get-version.outputs.buildMetaData }}
+    value: ${{ steps.generate.outputs.buildMetaData }}
   fullBuildMetaData:
     description: 'The FullBuildMetaData value'
-    value: ${{ steps.get-version.outputs.fullBuildMetaData }}
+    value: ${{ steps.generate.outputs.fullBuildMetaData }}
   majorMinorPatch:
     description: 'The MajorMinorPatch value'
     value: ${{ steps.generate.outputs.majorMinorPatch }}
   semVer:
     description: 'The SemVer value'
-    value: ${{ steps.get-version.outputs.semVer }}
+    value: ${{ steps.generate.outputs.semVer }}
   assemblySemVer:
     description: 'The AssemblySemVer value'
-    value: ${{ steps.get-version.outputs.assemblySemVer }}
+    value: ${{ steps.generate.outputs.assemblySemVer }}
   assemblySemFileVer:
     description: 'The AssemblySemFileVer value'
-    value: ${{ steps.get-version.outputs.assemblySemFileVer }}
+    value: ${{ steps.generate.outputs.assemblySemFileVer }}
   fullSemVer:
     description: 'The FullSemVer value'
-    value: ${{ steps.get-version.outputs.fullSemVer }}
+    value: ${{ steps.generate.outputs.fullSemVer }}
   informationalVersion:
     description: 'The InformationalVersion value'
-    value: ${{ steps.get-version.outputs.informationalVersion }}
+    value: ${{ steps.generate.outputs.informationalVersion }}
   branchName:
     description: 'The BranchName value'
-    value: ${{ steps.get-version.outputs.branchName }}
+    value: ${{ steps.generate.outputs.branchName }}
   escapedBranchName:
     description: 'The EscapedBranchName value'
-    value: ${{ steps.get-version.outputs.escapedBranchName }}
+    value: ${{ steps.generate.outputs.escapedBranchName }}
   sha:
     description: 'The Sha value'
-    value: ${{ steps.get-version.outputs.sha }}
+    value: ${{ steps.generate.outputs.sha }}
   shortSha:
     description: 'The ShortSha value'
-    value: ${{ steps.get-version.outputs.shortSha }}
+    value: ${{ steps.generate.outputs.shortSha }}
   versionSourceSha:
     description: 'The VersionSourceSha value'
-    value: ${{ steps.get-version.outputs.versionSourceSha }}
+    value: ${{ steps.generate.outputs.versionSourceSha }}
   commitsSinceVersionSource:
     description: 'The CommitsSinceVersionSource value'
-    value: ${{ steps.get-version.outputs.commitsSinceVersionSource }}
+    value: ${{ steps.generate.outputs.commitsSinceVersionSource }}
   uncommittedChanges:
     description: 'The UncommittedChanges value'
-    value: ${{ steps.get-version.outputs.uncommittedChanges }}
+    value: ${{ steps.generate.outputs.uncommittedChanges }}
   commitDate:
     description: 'The CommitDate value'
-    value: ${{ steps.get-version.outputs.commitDate }}
+    value: ${{ steps.generate.outputs.commitDate }}
 
 runs:
   using: composite
   steps:
-    - name: Install GitVersion
+    - name: Install
       uses: gittools/actions/gitversion/setup@v1.1.1
       with:
         versionSpec: '5.x'
-
-    - name: Get version
-      id: get-version
+    - name: Generate
+      id: generate
       uses: gittools/actions/gitversion/execute@v1.1.1
       with:
         targetPath: ./

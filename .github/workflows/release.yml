@@ -7,20 +7,10 @@ on:
 
 jobs:
   generate-version:
-    name: Generate Version
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/generate-version.yml
     outputs:
-      sem-ver: ${{ steps.get-version.outputs.semVer }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-      - name: Generate version
-        id: get-version
-        uses: ./version/generate
-  
+      sem-ver: ${{ steps.get-version.outputs.sem-ver }}
+
   production:
     name: Production
     runs-on: ubuntu-latest

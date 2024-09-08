@@ -1,12 +1,12 @@
-name: 'Upload Tar Artifact'
-description: 'Compress files with tar prior to artifacting to keep file privileges.'
+name: Upload Tar Artifact
+description: Compress files with tar prior to artifacting to keep file privileges.
 
 inputs:
   name:
     description: Artifact name
     required: true
   overwrite:
-    description: Artifact name
+    description: Whether to overwrite an existing artifact with the same name
     default: 'true'
   path:
     description: >

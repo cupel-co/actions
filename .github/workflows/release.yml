@@ -21,6 +21,7 @@ jobs:
     name: Release
     permissions:
       contents: write
+    environment: Production
     with:
       tag: v${{ needs.generate.outputs.sem-ver }}
     secrets:

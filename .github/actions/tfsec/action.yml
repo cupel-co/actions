@@ -1,0 +1,32 @@
+name: Run tfsec
+description: Run tfsec
+author: Cupel
+branding:
+  icon: Shield
+  color: purple
+  
+inputs:
+  working-directory:
+    description: Directory that contains the OpenTofu code
+    required: true
+    default: './infrastructure'
+
+runs:
+  using: composite
+  steps:
+    - name: Run
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+      with:
+        github_token: ${{ github.token }}
+        working_directory: ${{ inputs.working-directory }}
+    - name: Run
+      if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+      uses: aquasecurity/tfsec-sarif-action@v0.1.0
+      with:
+        sarif_file: tfsec.sarif
+    - name: Upload
+      if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: tfsec.sarif

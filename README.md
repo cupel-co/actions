@@ -21,6 +21,7 @@ A collection of reusable GitHub actions
 * [opentofu-apply.yml](.github/workflows/opentofu-apply.yml)
 * [opentofu-destroy.yml](.github/workflows/opentofu-destroy.yml)
 * [opentofu-plan.yml](.github/workflows/opentofu-plan.yml)
+* [opentofu-plan-and-apply.yml](.github/workflows/opentofu-plan-and-apply.yml)
 * [tag.yml](.github/workflows/tag.yml)
 * [tflint.yml](.github/workflows/tflint.yml)
 * [tfsec.yml](.github/workflows/tfsec.yml)

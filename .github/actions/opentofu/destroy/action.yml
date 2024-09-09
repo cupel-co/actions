@@ -34,7 +34,7 @@ runs:
     - name: Install OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
-        tofu_version: ${{ inputs.opentofu-version }}
+        tofu_version: ${{ inputs.version }}
     - name: Init
       shell: pwsh
       working-directory: ${{ inputs.working-directory }}

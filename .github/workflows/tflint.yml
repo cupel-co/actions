@@ -1,4 +1,4 @@
-name: TFLint
+name: TF Lint
 
 on:
   workflow_call:

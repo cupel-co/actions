@@ -1,0 +1,38 @@
+name: OpenTofu Apply
+description: OpenTofu Apply
+author: Cupel
+branding: 
+  icon: box
+  color: orange
+
+inputs:
+  artifact-name:
+    description: The name of the published artifact that includes the plan file. If the value isn't supplied then plan will not be uploaded.
+    required: true
+  apply-args:
+    description: Additional arguments for init command.
+    required: false
+  version:
+    description: The version of OpenTofu to install.
+    required: true
+    default: '1.8.1'
+
+runs:
+  using: composite
+  steps:
+    - name: Download ${{ inputs.artifact-name }}
+      uses: cupel-co/actions/artifact/download@v0.5.0
+      with:
+        name: ${{ inputs.artifact-name }}
+    - name: Install OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: ${{ inputs.version }}
+    - name: Apply
+      shell: pwsh
+      run: |
+        ls -al
+        tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} "plan.tfplan"
+      env:
+        TF_IN_AUTOMATION: 1
+        TF_INPUT: 0

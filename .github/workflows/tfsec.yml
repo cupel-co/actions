@@ -9,8 +9,8 @@ on:
         default: ./infrastructure
 
 jobs:
-  analyse:
-    name: Analyse
+  security:
+    name: Security
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,0 +1,30 @@
+name: Lint OpenTofu files
+description: Lint OpenTofu files
+author: Cupel
+branding:
+  icon: Code
+  color: purple
+
+inputs:
+  working-directory:
+    description: Directory that contains the OpenTofu code
+    required: true
+    default: './infrastructure'
+
+runs:
+  using: composite
+  steps:
+    - name: Install
+      uses: terraform-linters/setup-tflint@v4
+    - name: Init
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tflint --init
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Run
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tflint -f compact

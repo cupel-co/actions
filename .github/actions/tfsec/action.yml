@@ -1,5 +1,5 @@
-name: Run tfsec
-description: Run tfsec
+name: TF Static Analysis
+description: TF Static Analysis
 author: Cupel
 branding:
   icon: Shield

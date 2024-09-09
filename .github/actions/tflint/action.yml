@@ -1,4 +1,4 @@
-name: Lint OpenTofu files
+name: TFLint
 description: Lint OpenTofu files
 author: Cupel
 branding:

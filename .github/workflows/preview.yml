@@ -1,4 +1,4 @@
-name: 'Preview'
+name: Preview
 
 on:
   pull_request:
@@ -6,6 +6,10 @@ on:
       - opened
       - reopened
       - synchronize
+
+concurrency:
+  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref_name }}
 
 jobs:
   generate:

@@ -41,9 +41,6 @@ jobs:
   plan:
     name: Plan ${{ inputs.name }}
     runs-on: ubuntu-latest
-    concurrency:
-      cancel-in-progress: false
-      group: ${{ inputs.workspace }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

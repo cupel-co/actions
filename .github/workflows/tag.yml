@@ -1,4 +1,4 @@
-name: 'Tag'
+name: Tag
 
 on:
   workflow_call:
@@ -13,6 +13,10 @@ on:
         required: true
       google-chat-webhook-url:
         required: true
+
+concurrency:
+  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref_name }}
 
 jobs:
   tag:

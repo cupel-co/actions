@@ -1,9 +1,13 @@
-name: 'Release'
+name: Release
 
 on:
   push:
     branches:
       - main
+
+concurrency:
+  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.ref_name }}
 
 jobs:
   generate:

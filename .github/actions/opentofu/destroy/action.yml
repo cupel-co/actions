@@ -1,0 +1,70 @@
+name: OpenTofu Destroy
+description: OpenTofu Destroy
+author: Cupel
+branding:
+  icon: box
+  color: orange
+
+inputs:
+  destroy-args:
+    description: Additional arguments for destroy command.
+    required: false
+  init-args:
+    description: Additional arguments for init command.
+    required: false
+  use-primary-backend:
+    description: A flag to indicate if the primary backend should be used.
+    required: true
+    default: 'true'
+  version:
+    description: The version of OpenTofu to install.
+    required: true
+    default: '1.8.1'
+  working-directory:
+    description: Directory that contains the OpenTofu code.
+    required: true
+    default: './infrastructure'
+  workspace:
+    description: The workspace name. If the workspace doesn't exist it will be created.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install OpenTofu
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: ${{ inputs.version }}
+    - name: Init
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }}
+      env:
+        TF_IN_AUTOMATION: 1
+        TF_INPUT: 0
+    - name: Select workspace
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tofu workspace select -or-create=true "${{ inputs.workspace }}"
+      env:
+        TF_IN_AUTOMATION: 1
+        TF_INPUT: 0
+    - name: Delete infrastructure
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tofu destroy -auto-approve -no-color -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.destroy-args }}
+      env:
+        TF_IN_AUTOMATION: 1
+        TF_INPUT: 0
+    - name: Delete workspace
+      shell: pwsh
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        tofu workspace select default
+        tofu workspace delete "${{ inputs.workspace }}"
+      env:
+        TF_IN_AUTOMATION: 1
+        TF_INPUT: 0

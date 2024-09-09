@@ -4,30 +4,31 @@ on:
   workflow_call:
     inputs:
       destroy-args:
-        description: Additional arguments for destroy command.
+        description: Additional arguments to pass to the tofu destroy command.
         required: false
       init-args:
-        description: Additional arguments for init command.
+        description: Additional arguments to pass to the tofu init command.
         required: false
       use-primary-backend:
-        description: A flag to indicate if the primary backend should be used.
+        description: Specifies whether to use the primary backend during initialization.
         required: true
+        type: string
         default: 'true'
       version:
         description: The version of OpenTofu to install.
         required: true
-        default: '1.8.1'
+        default: 1.8.1
       working-directory:
-        description: Directory that contains the OpenTofu code.
+        description: The directory where the infrastructure code is located.
         required: true
-        default: './infrastructure'
+        default: ./infrastructure
       workspace:
-        description: The workspace name. If the workspace doesn't exist it will be created.
+        description: The workspace to select or create during the apply process.
         required: true
 
 jobs:
   destroy:
-    name: Destroy ${{ inputs.name }}
+    name: Destroy
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:

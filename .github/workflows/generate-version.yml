@@ -4,76 +4,76 @@ on:
   workflow_call:
     outputs:
       major:
-        description: 'The Major value'
+        description: The Major value
         value: ${{ jobs.version.outputs.major }}
       minor:
-        description: 'The Minor value'
+        description: The Minor value
         value: ${{ jobs.version.outputs.minor }}
       patch:
-        description: 'The Patch value'
+        description: The Patch value
         value: ${{ jobs.version.outputs.patch }}
       pre-release-tag:
-        description: 'The prerelease tag value'
+        description: The prerelease tag value
         value: ${{ jobs.version.outputs.pre-release-tag }}
       pre-release-tag-with-dash:
-        description: 'The prerelease tag with dash value'
+        description: The prerelease tag with dash value
         value: ${{ jobs.version.outputs.pre-release-tag-with-dash }}
       pre-release-label:
-        description: 'The prerelease lable value'
+        description: The prerelease lable value
         value: ${{ jobs.version.outputs.pre-release-label }}
       pre-release-number:
-        description: 'The prerelease number value'
+        description: The prerelease number value
         value: ${{ jobs.version.outputs.pre-release-number }}
       weighted-pre-release-number:
-        description: 'The weighted prerelease number value'
+        description: The weighted prerelease number value
         value: ${{ jobs.version.outputs.weighted-pre-release-number }}
       build-meta-data:
-        description: 'The build metadata value'
+        description: The build metadata value
         value: ${{ jobs.version.outputs.build-meta-data }}
       full-build-meta-data:
-        description: 'The full build metadata value'
+        description: The full build metadata value
         value: ${{ jobs.version.outputs.full-build-meta-data }}
       major-minor-patch:
-        description: 'The major minor patch value'
+        description: The major minor patch value
         value: ${{ jobs.version.outputs.major-minor-patch }}
       sem-ver:
-        description: 'The semantic version value'
+        description: The semantic version value
         value: ${{ jobs.version.outputs.sem-ver }}
       assembly-sem-ver:
-        description: 'The assembly semantic version value'
+        description: The assembly semantic version value
         value: ${{ jobs.version.outputs.assembly-sem-ver }}
       assembly-sem-file-ver:
-        description: 'The file assembly semantic version value'
+        description: The file assembly semantic version value
         value: ${{ jobs.version.outputs.assembly-sem-file-ver }}
       full-sem-ver:
-        description: 'The full semantic version value'
+        description: The full semantic version value
         value: ${{ jobs.version.outputs.full-sem-ver }}
       informational-version:
-        description: 'The informational version value'
+        description: The informational version value
         value: ${{ jobs.version.outputs.informational-version }}
       branch-name:
-        description: 'The branch name value'
+        description: The branch name value
         value: ${{ jobs.version.outputs.branch-nam }}
       escaped-branch-name:
-        description: 'The escaped branch name value'
+        description: The escaped branch name value
         value: ${{ jobs.version.outputs.escaped-branch-name }}
       sha:
-        description: 'The sha value'
+        description: The sha value
         value: ${{ jobs.version.outputs.sha }}
       short-sha:
-        description: 'The short sha value'
+        description: The short sha value
         value: ${{ jobs.version.outputs.short-sha }}
       version-source-sha:
-        description: 'The version source sha value'
+        description: The version source sha value
         value: ${{ jobs.version.outputs.version-source-sha }}
       commits-since-version-source:
-        description: 'The commits since version source value'
+        description: The commits since version source value
         value: ${{ jobs.version.outputs.commits-since-version-source }}
       uncommitted-changes:
-        description: 'The uncommitted changes value'
+        description: The uncommitted changes value
         value: ${{ jobs.version.outputs.uncommitted-changes }}
       commit-date:
-        description: 'The commit date value'
+        description: The commit date value
         value: ${{ jobs.version.outputs.commit-date }}
 
 jobs:

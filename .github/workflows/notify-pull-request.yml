@@ -4,6 +4,7 @@ on:
   workflow_call:
     secrets:
       google-chat-webhook-url:
+        description: The URL for sending messages to Google Chat
         required: true
 
 jobs:
@@ -15,6 +16,6 @@ jobs:
         if: ${{ always() }}
         uses: SimonScholz/google-chat-action@main
         with:
-          webhookUrl: ${{ secrets.google-chat-webhook-url != '' && secrets.google-chat-webhook-url || secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          webhookUrl: ${{ secrets.google-chat-webhook-url }}
           title: 'Pull request ${{ github.event.action }}'
           subtitle: ${{ github.event.pull_request.title }}

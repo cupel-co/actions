@@ -1,36 +1,53 @@
-name: Plan
+name: Plan and Apply
 
 on:
   workflow_call:
     inputs:
-      artifact-name:
+      apply-args:
+        description: Additional arguments to pass to the tofu apply command.
         required: false
         type: string
+      artifact-name:
+        description: The name of the artifact to upload after the plan step and download before the apply step.
+        required: false
+        type: string
+      environment:
+        description: The target environment where the apply operation will be executed (e.g., staging, production).
+        required: true
+        type: string
       init-args:
+        description: Additional arguments to pass to the tofu init command.
         required: false
         type: string
       oidc-role-arn:
+        description: The ARN of the OIDC role to assume for AWS credentials.
         required: true
         type: string
       plan-args:
+        description: Additional arguments to pass to the tofu plan command.
         required: false
         type: string
       region:
+        description: The AWS region to use for the plan and apply operations.
         required: true
         type: string
       use-primary-backend:
+        description: Specifies whether to use the primary backend during initialization.
         required: true
-        type: boolean
-        default: true
+        type: string
+        default: 'true'
       version:
+        description: The version of OpenTofu to install.
         required: false
         type: string
         default: 1.8.1
       working-directory:
+        description: The directory where the infrastructure code is located.
         required: false
         type: string
         default: ./infrastructure
       workspace:
+        description: The workspace to select or create during the plan and apply processes.
         required: true
         type: string
 

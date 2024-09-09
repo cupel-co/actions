@@ -4,42 +4,48 @@ on:
   workflow_call:
     inputs:
       artifact-name:
+        description: The name of the artifact to upload after the plan step.
         required: false
         type: string
       init-args:
+        description: Additional arguments to pass to the tofu init command.
         required: false
         type: string
-      name:
-        required: true
-        type: string
       oidc-role-arn:
+        description: The ARN of the OIDC role to assume for AWS credentials.
         required: true
         type: string
       plan-args:
+        description: Additional arguments to pass to the tofu plan command.
         required: false
         type: string
       region:
+        description: The AWS region to use for the plan operation.
         required: true
         type: string
       use-primary-backend:
+        description: Specifies whether to use the primary backend during initialization.
         required: true
-        type: boolean
+        type: string
         default: true
       version:
+        description: The version of OpenTofu to install.
         required: false
         type: string
         default: 1.8.1
       working-directory:
+        description: The directory where the infrastructure code is located.
         required: false
         type: string
         default: ./infrastructure
       workspace:
+        description: The workspace to select or create during the plan process.
         required: true
         type: string
 
 jobs:
   plan:
-    name: Plan ${{ inputs.name }}
+    name: Plan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

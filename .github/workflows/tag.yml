@@ -4,14 +4,18 @@ on:
   workflow_call:
     inputs:
       tag:
+        description:
         required: true
         type: string
     secrets:
       gh-gpg-private-key:
+        description: The private GPG key used for signing the Git tag.
         required: true
       gh-gpg-private-key-password:
+        description: The passphrase for the GPG private key.
         required: true
       google-chat-webhook-url:
+        description: The webhook URL to send notifications to Google Chat.
         required: true
 
 jobs:

@@ -25,6 +25,13 @@ on:
       workspace:
         description: The workspace to select or create during the apply process.
         required: true
+    secrets:
+      destroy-args:
+        description: Additional arguments to pass to the tofu destroy command.
+        required: false
+      init-args:
+        description: Additional arguments to pass to the tofu init command.
+        required: false
 
 jobs:
   destroy:
@@ -50,7 +57,7 @@ jobs:
         shell: pwsh
         working-directory: ${{ inputs.working-directory }}
         run: |
-          tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }}
+          tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }} ${{ secrets.init-args }}
         env:
           TF_IN_AUTOMATION: 1
           TF_INPUT: 0
@@ -66,7 +73,7 @@ jobs:
         shell: pwsh
         working-directory: ${{ inputs.working-directory }}
         run: |
-          tofu destroy -auto-approve -no-color -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.destroy-args }}
+          tofu destroy -auto-approve -no-color -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.destroy-args }} ${{ secrets.destroy-args }}
         env:
           TF_IN_AUTOMATION: 1
           TF_INPUT: 0

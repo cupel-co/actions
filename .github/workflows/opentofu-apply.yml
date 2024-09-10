@@ -28,6 +28,10 @@ on:
         required: false
         type: string
         default: 1.8.1
+    secrets:
+      apply-args:
+        description: Additional arguments to pass to the tofu apply command.
+        required: false
 
 jobs:
   apply:
@@ -57,7 +61,7 @@ jobs:
         shell: pwsh
         run: |
           ls -al
-          tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} "plan.tfplan"
+          tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} ${{ secrets.apply-args }} "plan.tfplan"
         env:
           TF_IN_AUTOMATION: 1
           TF_INPUT: 0

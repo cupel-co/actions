@@ -42,6 +42,13 @@ on:
         description: The workspace to select or create during the plan process.
         required: true
         type: string
+    secrets:
+      init-args:
+        description: Additional arguments to pass to the tofu init command.
+        required: false
+      plan-args:
+        description: Additional arguments to pass to the tofu plan command.
+        required: false
 
 jobs:
   plan:
@@ -66,7 +73,7 @@ jobs:
         shell: pwsh
         working-directory: ${{ inputs.working-directory }}
         run: |
-          tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }}
+          tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }} ${{ secrets.init-args }}
         env:
           TF_IN_AUTOMATION: 1
           TF_INPUT: 0
@@ -82,7 +89,7 @@ jobs:
         shell: pwsh
         working-directory: ${{ inputs.working-directory }}
         run: |
-          tofu plan -no-color -out="plan.tfplan" -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.plan-args }}
+          tofu plan -no-color -out="plan.tfplan" -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.plan-args }} ${{ secrets.plan-args }}
         env:
           TF_IN_AUTOMATION: 1
           TF_INPUT: 0

@@ -15,7 +15,7 @@ inputs:
   version:
     description: The version of OpenTofu to install.
     required: true
-    default: '1.8.1'
+    default: 1.8.1
 
 runs:
   using: composite
@@ -28,6 +28,10 @@ runs:
       uses: opentofu/setup-opentofu@v1
       with:
         tofu_version: ${{ inputs.version }}
+    - name: Delete ${{ inputs.artifact-name }}
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: ${{ inputs.artifact-name }}
     - name: Apply
       shell: pwsh
       run: |

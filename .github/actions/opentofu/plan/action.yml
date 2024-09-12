@@ -64,7 +64,7 @@ runs:
         TF_INPUT: 0
     - name: Publish ${{ inputs.artifact-name }}
       if: ${{ inputs.artifact-name != '' }}
-      uses: cupel-co/actions/artifact/upload@v0.5.0
+      uses: cupel-co/actions/artifact/upload@v0.13.0
       with:
         name: ${{ inputs.artifact-name }}
         overwrite: true

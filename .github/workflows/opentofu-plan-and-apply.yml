@@ -106,7 +106,7 @@ jobs:
           TF_INPUT: 0
       - name: Publish ${{ inputs.artifact-name }}
         if: ${{ inputs.artifact-name != '' }}
-        uses: cupel-co/actions/artifact/upload@v0.5.0
+        uses: cupel-co/actions/artifact/upload@v0.13.0
         with:
           name: ${{ inputs.artifact-name }}
           overwrite: true
@@ -131,7 +131,7 @@ jobs:
           role-to-assume: ${{ inputs.oidc-role-arn }}
           aws-region: ${{ inputs.region }}
       - name: Download ${{ inputs.artifact-name }}
-        uses: cupel-co/actions/artifact/download@v0.5.0
+        uses: cupel-co/actions/artifact/download@v0.13.0
         with:
           name: ${{ inputs.artifact-name }}
       - name: Install OpenTofu

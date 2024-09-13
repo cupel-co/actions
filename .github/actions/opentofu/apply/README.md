@@ -1,14 +1,13 @@
 # OpenTofu Apply
 Action: [apply](./action.yml)
 
-The OpenTofu Apply GitHub Action downloads a plan artifact, installs a specified version of OpenTofu, and applies the plan using the apply command with optional custom arguments. It automates the process of applying a pre-generated plan, ensuring smooth integration within workflows that use OpenTofu for infrastructure management.
+The OpenTofu Apply GitHub Action installs a specified version of OpenTofu, and applies the plan using the apply command with optional custom arguments.
 
 ## Inputs
-| Name            | Description                                                                                       | Required | Default Value |
-|-----------------|---------------------------------------------------------------------------------------------------|----------|---------------|
-| `artifact-name` | The name of the artifact that includes the plan file. If not supplied, plan will not be uploaded. | true     | N/A           |
-| `apply-args`    | Additional arguments for the `apply` command.                                                     | false    | N/A           |
-| `version`       | The version of OpenTofu to install.                                                               | true     | `'1.8.1'`     |
+| Name            | Description                                   | Required | Default Value |
+|-----------------|-----------------------------------------------|----------|---------------|
+| `apply-args`    | Additional arguments for the `apply` command. | false    | N/A           |
+| `version`       | The version of OpenTofu to install.           | true     | `1.8.1`       |
 
 ## Example
 ```yaml

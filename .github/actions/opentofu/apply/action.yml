@@ -1,37 +1,28 @@
 name: OpenTofu Apply
-description: OpenTofu Apply
+description: Apply changes to infrastructure
 author: Cupel
 branding: 
   icon: box
   color: orange
 
 inputs:
-  artifact-name:
-    description: The name of the published artifact that includes the plan file. If the value isn't supplied then plan will not be uploaded.
-    required: true
   apply-args:
     description: Additional arguments for init command.
     required: false
+    type: string
   version:
     description: The version of OpenTofu to install.
     required: true
     default: 1.8.1
+    type: string
 
 runs:
   using: composite
   steps:
-    - name: Download ${{ inputs.artifact-name }}
-      uses: cupel-co/actions/artifact/download@v0.13.0
-      with:
-        name: ${{ inputs.artifact-name }}
     - name: Install OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
-        tofu_version: ${{ inputs.version }}
-    - name: Delete ${{ inputs.artifact-name }}
-      uses: geekyeggo/delete-artifact@v5
-      with:
-        name: ${{ inputs.artifact-name }}
+        tofu_version: "${{ inputs.version }}"
     - name: Apply
       shell: pwsh
       run: |

@@ -3,11 +3,11 @@ Action: [download](./action.yml)
 
 The Download Tar Artifact action retrieves an artifact previously uploaded via the Upload Tar Artifact action, extracts the contents from the .tar archive, and restores the original file structure and permissions. It is useful for workflows where artifacts need to be transferred between jobs or workflows with file privileges intact.
 
-## Outputs
+## Inputs
 | Name   | Description                                           | Required | Default |
 |--------|-------------------------------------------------------|----------|---------|
-| `name` | The name of the artifact to download.                 | false    |         |
-| `path` | The destination directory where the artifact is saved | false    |         |
+| `name` | The name of the artifact to download.                 | true     |         |
+| `path` | The destination directory where the artifact is saved | true     |         |
 
 ## Example
 ```yaml

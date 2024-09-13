@@ -1,0 +1,16 @@
+name: Notify PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  pull-request:
+    name: Notify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Google Chat
+        id: generate
+        uses: ./.github/actions/notify/pull-request

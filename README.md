@@ -1,4 +1,6 @@
 # Actions
+[![Preview](https://github.com/cupel-co/actions/actions/workflows/preview.yml/badge.svg?branch=main&event=pull_request)](https://github.com/cupel-co/actions/actions/workflows/preview.yml?query=branch%3Amain)
+
 A collection of reusable GitHub actions
 
 ## Actions

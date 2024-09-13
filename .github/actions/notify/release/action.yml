@@ -3,7 +3,7 @@ description: Send a notification when a release has been created
 
 inputs:
   tag:
-    description: 
+    description: The tag value
     required: true
     type: string
 

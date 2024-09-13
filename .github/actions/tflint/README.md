@@ -31,5 +31,5 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Infrastructure
-        uses: ./.github/actions/tflint
+        uses: cupel-co/actions/.github/actions/tflint@vx.x.x
 ```

@@ -14,7 +14,7 @@ outputs:
   pre-release-tag:
     description: 'The prerelease tag value'
     value: ${{ steps.generate.outputs.preReleaseTag }}
-  pre-release-tag-with-dash :
+  pre-release-tag-with-dash:
     description: 'The prerelease tag with dash value'
     value: ${{ steps.generate.outputs.preReleaseTagWithDash }}
   pre-release-label:
@@ -91,4 +91,4 @@ runs:
         useConfigFile: true
         configFilePath: GitVersion.yml
       env:
-        BUILD_NUMBER: ${{ github.run_number }}
+        BUILD_NUMBER: "${{ github.run_number }}"

@@ -1,5 +1,5 @@
-# OpenTofu Plan
-Action: [plan](./action.yml)
+# TFSec
+Action: [tfsec](./action.yml)
 
 The Run tfsec GitHub Action runs a security scan on OpenTofu files using tfsec, a static analysis tool for detecting security vulnerabilities in Terraform code. It scans the specified directory and posts comments directly to the pull request with the findings.
 
@@ -8,6 +8,11 @@ The Run tfsec GitHub Action runs a security scan on OpenTofu files using tfsec, 
 |---------------------|-------------------------------------------|----------|----------------------|
 | `working-directory` | Directory that contains the OpenTofu code | true     | `'./infrastructure'` |
 
+## Secrets
+| Name           | Description                                                                | Required |
+|----------------|----------------------------------------------------------------------------|----------|
+| `github.token` | GitHube token. Needs `pull-requests: write` or `content: write` permission | true     |
+
 ## Example
 ```yaml
 jobs:
@@ -15,7 +20,7 @@ jobs:
     name: Analyse
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     concurrency:
       cancel-in-progress: false
@@ -27,5 +32,5 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Infrastructure
-        uses: ./.github/actions/tfsec
+        uses: cupel-co/actions/.github/actions/tfsec@vx.x.x
 ```

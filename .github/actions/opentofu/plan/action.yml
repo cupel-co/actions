@@ -16,18 +16,18 @@ inputs:
     type: string
   use-primary-backend:
     description: A flag to indicate if the primary backend should be used.
-    required: true
     default: true
+    required: true
     type: string
   version:
     description: The version of OpenTofu to install.
-    required: true
     default: 1.8.1
+    required: true
     type: string
   working-directory:
     description: Directory that contains the OpenTofu code.
-    required: true
     default: ./infrastructure
+    required: true
     type: string
   workspace:
     description: The workspace name. If the workspace doesn't exist it will be created.

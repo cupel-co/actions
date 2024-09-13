@@ -34,7 +34,7 @@ jobs:
           role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
           aws-region: ap-southeast-2
       - name: Plan
-        uses: cupel-co/platform-opentofu-aws-backend/.github/actions/opentofu/plan@vx.x.x
+        uses: cupel-co/actions/.github/actions/opentofu/plan@vx.x.x
         with:
           artifact-name: 'opentofu-aws-backend'
           init-args: '-var-file="variables/platform.tfvars"'

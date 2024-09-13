@@ -12,8 +12,8 @@ inputs:
     type: string
   version:
     description: The version of OpenTofu to install.
-    required: true
     default: 1.8.1
+    required: true
     type: string
 
 runs:

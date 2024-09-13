@@ -1,10 +1,20 @@
 # Actions
+[![Release](https://github.com/cupel-co/actions/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/cupel-co/actions/actions/workflows/release.yml?query=branch%3Amain)
+
 A collection of reusable GitHub actions
 
 ## Actions
 * Artifact
+  * [delete](.github/actions/artifact/delete/README.md)
   * [download](.github/actions/artifact/download/README.md)
   * [upload](.github/actions/artifact/upload/README.md)
+* GitHub
+  * [release](.github/actions/github/release/README.md)
+  * [tag](.github/actions/github/tag/README.md)
+* Notify
+  * [deployment](.github/actions/notify/deployment/README.md)
+  * [pull-request](.github/actions/notify/pull-request/README.md)
+  * [release](.github/actions/notify/release/README.md)
 * OpenTofu
   * [apply](.github/actions/opentofu/apply/README.md)
   * [plan](.github/actions/opentofu/plan/README.md)
@@ -13,15 +23,3 @@ A collection of reusable GitHub actions
 * [tflint](.github/actions/tflint/README.md)
 * Version
   * [generate](.github/actions/version/generate/README.md)
-
-
-## Workflows
-* [generate-version.yml](.github/workflows/generate-version.yml)
-* [notify-pull-request.yml](.github/workflows/notify-pull-request.yml)
-* [opentofu-apply.yml](.github/workflows/opentofu-apply.yml)
-* [opentofu-destroy.yml](.github/workflows/opentofu-destroy.yml)
-* [opentofu-plan.yml](.github/workflows/opentofu-plan.yml)
-* [opentofu-plan-and-apply.yml](.github/workflows/opentofu-plan-and-apply.yml)
-* [tag.yml](.github/workflows/tag.yml)
-* [tflint.yml](.github/workflows/tflint.yml)
-* [tfsec.yml](.github/workflows/tfsec.yml)

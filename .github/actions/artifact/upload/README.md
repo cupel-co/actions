@@ -3,7 +3,7 @@ Action: [upload](./action.yml)
 
 The Upload Tar Artifact action compresses specified files or directories into a .tar archive and uploads the artifact, ensuring that file permissions are preserved. This is useful when file privileges need to remain intact across different environments or workflows. The action also allows specifying the artifact name, overwrite settings, and retention days.
 
-## Outputs
+## Inputs
 | Name             | Description                                                                                                     | Required | Default |
 |------------------|-----------------------------------------------------------------------------------------------------------------|----------|---------|
 | `name`           | The name of the artifact.                                                                                       | true     |         |

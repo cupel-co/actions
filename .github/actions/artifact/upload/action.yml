@@ -5,35 +5,39 @@ inputs:
   name:
     description: Artifact name
     required: true
+    type: string
   overwrite:
     description: Whether to overwrite an existing artifact with the same name
     default: 'true'
+    required: false
+    type: string
   path:
     description: >
       A file, directory or wildcard pattern that describes what to upload.
-      Note: The path provided will be maintained through tar, so after download-tartifact, and subfolder structure will remain intact.
+      Note: The path provided will be maintained through tar, so after download-artifact, and subfolder structure will remain intact.
     required: true
+    type: string
   retention-days:
     description: >
       Duration after which artifact will expire in days. 0 means using default retention.
       Minimum 1 day.
       Maximum 90 days unless changed from the repository settings page.
     required: false
+    type: number
 
 runs:
   using: composite
   steps:
     - run: |
         shopt -s globstar
-        tar -cvf artifact.tar -C ${{ inputs.path }} .
+        tar -cvf artifact.tar -C "${{ inputs.path }}" .
       shell: bash
-
     - uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.name }}
+        name: "${{ inputs.name }}"
         path: artifact.tar
-        overwrite: ${{ inputs.overwrite }}
-        retention-days: ${{ inputs.retention-days }}
-
-    - run: rm artifact.tar
+        overwrite: "${{ inputs.overwrite }}"
+        retention-days: "${{ inputs.retention-days }}"
+    - run: |
+        rm artifact.tar
       shell: pwsh

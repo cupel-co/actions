@@ -1,26 +1,30 @@
 name: Download Tar Artifact
-description: Download and extract a tar artifact that was previously uploaded in the workflow by the upload-tartifact action
+description: Download and extract a tar artifact that was previously uploaded in the workflow by the upload-artifact action
 
 inputs:
   name:
     description: Artifact name
-    required: false
+    required: true
+    type: string
   path:
     description: Destination path
-    required: false
+    required: true
+    type: string
 
 runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v4
       with:
-        name: ${{ inputs.name }}
-        path: ${{ inputs.path }}
+        name: "${{ inputs.name }}"
+        path: "${{ inputs.path }}"
 
-    - run: tar -xvf artifact.tar
-      working-directory: ${{ inputs.path }}
+    - run: |
+        tar -xvf artifact.tar
+      working-directory: "${{ inputs.path }}"
       shell: pwsh
 
-    - run: rm artifact.tar
-      working-directory: ${{ inputs.path }}
+    - run: |
+        rm artifact.tar
+      working-directory: "${{ inputs.path }}"
       shell: pwsh

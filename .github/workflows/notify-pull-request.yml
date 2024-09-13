@@ -1,21 +1,23 @@
 name: Notify PR
 
 on:
-  workflow_call:
-    secrets:
-      google-chat-webhook-url:
-        description: The URL for sending messages to Google Chat
-        required: true
+  pull_request:
+    types:
+      - opened
+      - reopened
 
 jobs:
-  notify:
-    name: Send notification
+  pull-request:
+    name: Notify
     runs-on: ubuntu-latest
     steps:
-      - name: Notify Google Chat
-        if: ${{ always() }}
-        uses: SimonScholz/google-chat-action@main
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          webhookUrl: ${{ secrets.google-chat-webhook-url }}
-          title: 'Pull request ${{ github.event.action }}'
-          subtitle: ${{ github.event.pull_request.title }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Google Chat
+        id: generate
+        uses: ./.github/actions/notify/pull-request
+        with:
+          google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"

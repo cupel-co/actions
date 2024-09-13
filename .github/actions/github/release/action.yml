@@ -1,0 +1,25 @@
+name: Release
+description: Create a release from a GitHub tag
+inputs:
+  tag:
+    description: Tag value
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Generate changelog
+      id: changelog
+      uses: requarks/changelog-action@v1
+      with:
+        token: "${{ github.token }}"
+        tag: "${{ inputs.tag }}"
+        writeToFile: false
+        includeInvalidCommits: true
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        body: "${{ steps.changelog.outputs.changes }}"
+        tag_name: "${{ inputs.tag }}"
+        make_latest: true

@@ -1,0 +1,20 @@
+name: Notify Deployment
+description: Send a notification when a deployment has finished
+
+inputs:
+  google-chat-webhook-url:
+    description: The Webhook URL for the chat to send the message to
+    required: true
+    type: string
+    
+runs:
+  using: composite
+  steps:
+    - name: Notify
+      if: ${{ always() }}
+      uses: SimonScholz/google-chat-action@main
+      with:
+        webhookUrl: "${{ inputs.google-chat-webhook-url }}"
+        title: "Deployed ${{ github.event.action }}"
+        subtitle: "${{ github.event.pull_request.title }}"
+        jobStatus: "${{ job.status }}"

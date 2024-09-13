@@ -1,0 +1,16 @@
+name: Delete artifact
+description: Delete an uploaded artifact
+
+inputs:
+  name:
+    description: Artifact name
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: "Delete ${{ inputs.name }}"
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: "${{ inputs.name }}"

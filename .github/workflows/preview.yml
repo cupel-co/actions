@@ -14,4 +14,13 @@ concurrency:
 jobs:
   generate:
     name: Generate
-    uses: ./.github/workflows/generate-version.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Generate version
+        id: generate
+        uses: ./.github/actions/version/generate

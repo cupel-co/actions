@@ -12,18 +12,41 @@ concurrency:
 jobs:
   generate:
     name: Generate
-    uses: ./.github/workflows/generate-version.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Generate version
+        id: generate
+        uses: ./.github/actions/version/generate
 
   release:
-    uses: ./.github/workflows/tag.yml
+    name: Release
+    runs-on: ubuntu-latest
     needs:
       - generate
-    name: Release
     permissions:
       contents: write
-    with:
+    env:
       tag: v${{ needs.generate.outputs.sem-ver }}
-    secrets:
-      gh-gpg-private-key: ${{ secrets.GH_GPG_PRIVATE_KEY }}
-      gh-gpg-private-key-password: ${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}
-      google-chat-webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Create
+        uses: ./.github/actions/github/tag
+        with:
+          tag: ${{ env.tag }}
+      - name: Create
+        uses: ./.github/actions/github/release
+        with:
+          tag: ${{ env.tag }}
+      - name: Notify
+        uses: ./.github/actions/notify/release
+        with: 
+          tag: ${{ env.tag }}

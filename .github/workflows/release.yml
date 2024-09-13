@@ -41,6 +41,8 @@ jobs:
       - name: Create
         uses: ./.github/actions/github/tag
         with:
+          gpg-key: "${{ secrets.GH_GPG_KEY }}"
+          gpg-password: "${{ secrets.GH_GPG_KEY_PASSWORD }}"
           tag: ${{ env.tag }}
       - name: Create
         uses: ./.github/actions/github/release
@@ -48,5 +50,6 @@ jobs:
           tag: ${{ env.tag }}
       - name: Notify
         uses: ./.github/actions/notify/release
-        with: 
+        with:
+          google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
           tag: ${{ env.tag }}

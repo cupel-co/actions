@@ -1,16 +1,16 @@
 # OpenTofu Destroy
 Action: [destroy](./action.yml)
 
-The OpenTofu Destroy action automates the process of tearing down infrastructure defined in OpenTofu code. It initializes the OpenTofu environment, selects or creates the necessary workspace, destroys the resources, and optionally deletes the workspace. This action provides flexibility through customizable arguments and supports using either a primary or secondary backend.
+The OpenTofu Destroy action automates the process of tearing down infrastructure defined in OpenTofu code. It initializes the OpenTofu environment, selects or creates the necessary workspace, destroys the resources, and optionally deletes the workspace.
 
 ## Inputs
 | Name                  | Description                                                             | Required | Default            |
 |-----------------------|-------------------------------------------------------------------------|----------|--------------------|
 | `destroy-args`        | Additional arguments for the `destroy` command.                         | false    |                    |
 | `init-args`           | Additional arguments for the `init` command.                            | false    |                    |
-| `use-primary-backend` | A flag to indicate whether the primary backend should be used.          | true     | 'true'             |
-| `version`             | The version of OpenTofu to install.                                     | true     | '1.8.1'            |
-| `working-directory`   | The directory containing the OpenTofu code.                             | true     | './infrastructure' |
+| `use-primary-backend` | A flag to indicate whether the primary backend should be used.          | true     | `true`             |
+| `version`             | The version of OpenTofu to install.                                     | true     | `1.8.1`            |
+| `working-directory`   | The directory containing the OpenTofu code.                             | true     | `./infrastructure` |
 | `workspace`           | The workspace name. If the workspace doesn't exist, it will be created. | true     |                    |
 
 ## Example

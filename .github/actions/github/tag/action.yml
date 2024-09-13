@@ -1,0 +1,26 @@
+name: Create Tag
+description: Create a tag
+inputs:
+  tag:
+    description: Tag value
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GH_GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}
+        git_user_signingkey: true
+        git_tag_gpgsign: true
+    - name: Create tag
+      shell: pwsh
+      run: |
+        git tag -s "${{ inputs.tag }}" -m "${{ inputs.tag }}"
+    - name: Push tag
+      shell: pwsh
+      run: |
+        git push origin tag "${{ inputs.tag }}"

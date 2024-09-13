@@ -4,10 +4,12 @@ description: Download and extract a tar artifact that was previously uploaded in
 inputs:
   name:
     description: Artifact name
-    required: false
+    required: true
+    type: string
   path:
     description: Destination path
-    required: false
+    required: true
+    type: string
 
 runs:
   using: composite

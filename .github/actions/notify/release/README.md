@@ -3,10 +3,10 @@ Action: [release](./action.yml)
 
 Send a notification when a release has been created.
 
-## Secrets
-| Name                              | Description                                         | Required |
-|-----------------------------------|-----------------------------------------------------|----------|
-| `secrets.GOOGLE_CHAT_WEBHOOK_URL` | The Webhook URL for the chat to send the message to | true     |
+## Inputs
+| Name                      | Description                                         | Required | Default |
+|---------------------------|-----------------------------------------------------|----------|---------|
+| `google-chat-webhook-url` | The Webhook URL for the chat to send the message to | true     |         |
 
 ## Example
 ```yaml
@@ -17,4 +17,6 @@ jobs:
     steps:
       - name: Notify
         uses: cupel-co/actions/.github/actions/notify/release@vX.X.X
+        with:
+          google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
 ```

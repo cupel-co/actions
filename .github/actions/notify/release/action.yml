@@ -2,6 +2,10 @@ name: Notify Release
 description: Send a notification when a release has been created
 
 inputs:
+  google-chat-webhook-url:
+    description: The Webhook URL for the chat to send the message to
+    required: true
+    type: string
   tag:
     description: The tag value
     required: true
@@ -14,7 +18,7 @@ runs:
       if: ${{ always() }}
       uses: SimonScholz/google-chat-action@main
       with:
-        webhookUrl: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
+        webhookUrl: "${{ inputs.google-chat-webhook-url }}"
         title: "Released ${{ inputs.tag }}"
         subtitle: "${{ github.event.head_commit.message }}"
         jobStatus: "${{ job.status }}"

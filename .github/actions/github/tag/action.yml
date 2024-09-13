@@ -1,6 +1,14 @@
 name: Create Tag
 description: Create a tag
 inputs:
+  gpg-key:
+    description: The GPG key
+    required: true
+    type: string
+  gpg-password:
+    description: The password for the GPG key
+    required: true
+    type: string
   tag:
     description: Tag value
     required: true
@@ -12,8 +20,8 @@ runs:
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v6
       with:
-        gpg_private_key: ${{ secrets.GH_GPG_PRIVATE_KEY }}
-        passphrase: ${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}
+        gpg_private_key: ${{ input.gpg-key }}
+        passphrase: ${{ inputs.gpg-password }}
         git_user_signingkey: true
         git_tag_gpgsign: true
     - name: Create tag

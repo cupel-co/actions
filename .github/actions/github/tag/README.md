@@ -4,16 +4,16 @@ Action: [tag](./action.yml)
 Create a tag
 
 ## Inputs
-| Name  | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `tag` | Tag value   | true     |         |
+| Name           | Description                  | Required | Default |
+|----------------|------------------------------|----------|---------|
+| `gpg-key`      | The GPG key.                 | true     |         |
+| `gpg-password` | The password for the GPG key | true     |         |
+| `tag`          | Tag value                    | true     |         |
 
 ## Secrets
-| Name                                  | Description                                       | Required |
-|---------------------------------------|---------------------------------------------------|----------|
-| `github.token`                        | GitHube token. Needs `contents: write` permission | true     |
-| `secrets.GH_GPG_PRIVATE_KEY`          | GPG key for signing requests                      | true     |
-| `secrets.GH_GPG_PRIVATE_KEY_PASSWORD` | Password for GPG key                              | true     |
+| Name            | Description                                       | Required |
+|-----------------|---------------------------------------------------|----------|
+| `github.token`  | GitHube token. Needs `contents: write` permission | true     |
 
 ## Example
 ```yaml
@@ -27,5 +27,7 @@ jobs:
       - name: Create
         uses: cupel-co/actions/.github/actions/github/tag@vX.X.X
         with:
+          gpg-key: "${{ secrets.GH_GPG_KEY }}"
+          gpg-password: "${{ secrets.GH_GPG_KEY_PASSWORD }}"
           tag: v1.0.0
 ```

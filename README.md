@@ -13,15 +13,3 @@ A collection of reusable GitHub actions
 * [tflint](.github/actions/tflint/README.md)
 * Version
   * [generate](.github/actions/version/generate/README.md)
-
-
-## Workflows
-* [generate-version.yml](.github/workflows/generate-version.yml)
-* [notify-pull-request.yml](.github/workflows/notify-pull-request.yml)
-* [opentofu-apply.yml](.github/workflows/opentofu-apply.yml)
-* [opentofu-destroy.yml](.github/workflows/opentofu-destroy.yml)
-* [opentofu-plan.yml](.github/workflows/opentofu-plan.yml)
-* [opentofu-plan-and-apply.yml](.github/workflows/opentofu-plan-and-apply.yml)
-* [tag.yml](.github/workflows/tag.yml)
-* [tflint.yml](.github/workflows/tflint.yml)
-* [tfsec.yml](.github/workflows/tfsec.yml)

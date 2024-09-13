@@ -1,0 +1,20 @@
+name: Notify Release
+description: Send a notification when a release has been created
+
+inputs:
+  tag:
+    description: 
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Notify
+      if: ${{ always() }}
+      uses: SimonScholz/google-chat-action@main
+      with:
+        webhookUrl: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
+        title: "Released ${{ inputs.tag }}"
+        subtitle: "${{ github.event.head_commit.message }}"
+        jobStatus: "${{ job.status }}"

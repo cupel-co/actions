@@ -1,12 +1,17 @@
-# OpenTofu Plan
+# TF Lint
 Action: [tflint](./action.yml)
 
-The Lint OpenTofu files GitHub Action installs TFLint, initializes its configuration, and runs a linting process on OpenTofu files in the specified directory. This action ensures that the OpenTofu code is linted for best practices and potential issues.
+The Lint TF files GitHub Action installs TFLint, initializes its configuration, and runs a linting process on OpenTofu files in the specified directory.
 
 ## Inputs
-| Name                | Description                               | Required | Default Value        |
-|---------------------|-------------------------------------------|----------|----------------------|
-| `working-directory` | Directory that contains the OpenTofu code | true     | `'./infrastructure'` |
+| Name                | Description                               | Required | Default Value      |
+|---------------------|-------------------------------------------|----------|--------------------|
+| `working-directory` | Directory that contains the OpenTofu code | true     | `./infrastructure` |
+
+## Secrets
+| Name           | Description                                            | Required |
+|----------------|--------------------------------------------------------|----------|
+| `github.token` | GitHube token. Needs `pull-requests: write` permission | true     |
 
 ## Example
 ```yaml
@@ -15,7 +20,6 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       pull-requests: write
     concurrency:
       cancel-in-progress: false

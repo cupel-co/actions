@@ -8,8 +8,9 @@ branding:
 inputs:
   working-directory:
     description: Directory that contains the OpenTofu code
+    default: ./infrastructure
     required: true
-    default: './infrastructure'
+    type: string
 
 runs:
   using: composite
@@ -18,13 +19,13 @@ runs:
       uses: terraform-linters/setup-tflint@v4
     - name: Init
       shell: pwsh
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: "${{ inputs.working-directory }}"
       run: |
         tflint --init
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: "${{ github.token }}"
     - name: Run
       shell: pwsh
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: "${{ inputs.working-directory }}"
       run: |
         tflint -f compact

@@ -21,6 +21,9 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - name: Generate version
         id: generate
         uses: ./.github/actions/version/generate
+        with:
+          flow-type: 'GITHUB_FLOW'

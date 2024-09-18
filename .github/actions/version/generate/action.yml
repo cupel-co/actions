@@ -75,13 +75,77 @@ outputs:
     description: 'The commit date value'
     value: ${{ steps.generate.outputs.commitDate }}
 
+inputs:
+  flow-type:
+    description: 'The flow type to use (GITHUB_FLOW)'
+    required: true
+    default: GITHUB_FLOW
+    type: string
+
 runs:
   using: composite
   steps:
+    - name: Set flow type
+      id: set_flow
+      shell: pwsh
+      run: |
+        if ('${{ inputs.flow-type }}' -ne 'GITHUB_FLOW') {
+          Write-Error "Invalid flow-type: ${{ inputs.flow-type }}. Only GITHUB_FLOW is supported at this time."
+          throw "Exiting due to invalid flow-type"
+        }
+
+    - name: Create GitVersion config file for GITHUB_FLOW
+      shell: pwsh
+      if: ${{ inputs.flow-type == 'GITHUB_FLOW' }}
+      run: |
+        @"
+        assembly-versioning-format: '{Major}.{Minor}.{Patch}'
+        assembly-file-versioning-format: '{Major}.{Minor}.{Patch}'
+        assembly-informational-format: '{Major}.{Minor}.{Patch}'
+        tag-prefix: v
+        commit-message-incrementing: Enabled
+        major-version-bump-message: '^(feat|style|refactor|test)\(GH-\d*\): BREAKING CHANGES(.*\W*)*'
+        minor-version-bump-message: '^(feat|docs|style|refactor|test|chore)\(GH-\d*\):(.*\W*)*'
+        patch-version-bump-message: '^(fix)\(GH-\d*\):(.*\W*)*'
+        commit-date-format: 'o'
+        update-build-number: true
+        mode: ContinuousDeployment
+        strategies:
+          - MergeMessage
+          - TaggedCommit
+        branches:
+          main:
+            regex: ^main$
+            is-main-branch: true
+            prevent-increment:
+              when-branch-merged: false
+              of-merged-branch: false
+          feature:
+            regex: ^(feature|feat|fix|docs|style|refactor|test|chore)[/]
+            label: alpha
+            source-branches:
+              - main
+              - feature
+          pull-request:
+            regex: ^(pull|pull\-requests|pr)[/]
+            label: preview
+            source-branches:
+              - main
+              - feature
+            label-number-pattern: '[/-](?<number>\d+)[-/]'
+        ignore:
+          sha: []
+        merge-message-formats: {}
+        increment: Inherit
+        pre-release-weight: 60000
+        prevent-increment:
+          when-current-commit-tagged: true
+        "@ | Out-File -FilePath "${{ runner.temp }}/GitVersion.yml" -Encoding utf8
+
     - name: Install
       uses: gittools/actions/gitversion/setup@v1.1.1
       with:
-        versionSpec: '5.x'
+        versionSpec: '6.x'
     - name: Generate
       id: generate
       uses: gittools/actions/gitversion/execute@v1.1.1
@@ -89,6 +153,6 @@ runs:
         targetPath: ./
         disableCache: true
         useConfigFile: true
-        configFilePath: GitVersion.yml
+        configFilePath: ${{ runner.temp }}/GitVersion.yml
       env:
         BUILD_NUMBER: "${{ github.run_number }}"

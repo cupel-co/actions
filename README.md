@@ -1,5 +1,5 @@
 # Actions
-[![Release](https://github.com/cupel-co/actions/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/cupel-co/actions/actions/workflows/release.yml?query=branch%3Amain)
+[![Tag](https://github.com/cupel-co/actions/actions/workflows/tag.yml/badge.svg)](https://github.com/cupel-co/actions/actions/workflows/tag.yml)
 
 A collection of reusable GitHub actions
 

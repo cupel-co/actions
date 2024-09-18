@@ -13,13 +13,14 @@ runs:
       id: changelog
       uses: requarks/changelog-action@v1
       with:
+        includeInvalidCommits: true
         token: "${{ github.token }}"
         tag: "${{ inputs.tag }}"
         writeToFile: false
-        includeInvalidCommits: true
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         body: "${{ steps.changelog.outputs.changes }}"
         tag_name: "${{ inputs.tag }}"
         make_latest: true
+        token: "${{ github.token }}"

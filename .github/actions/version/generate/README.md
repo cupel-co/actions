@@ -3,6 +3,11 @@ Action: [generate](./action.yml)
 
 The Generate Semantic Version GitHub Action uses GitVersion to generate semantic versioning information for a project. It calculates and outputs detailed versioning components such as major, minor, patch, pre-release tags, build metadata, and commit information. The action ensures that versioning is automatically derived based on Git history, which can then be used for various purposes like tagging releases or setting version numbers in a project.
 
+## Inputs
+| Name        | Description                        | Required | Default Value |
+|-------------|------------------------------------|----------|---------------|
+| `flow-type` | The flow type to use (GITHUB_FLOW) | true     | `GITHUB_FLOW` | 
+
 ## Outputs
 | Name                           | Description                              |
 |--------------------------------|------------------------------------------|
@@ -46,4 +51,6 @@ jobs:
       - name: Generate version
         id: generate
         uses: cupel-co/actions/.github/actions/version/generate@vX.X.X
+        with:
+          
 ```

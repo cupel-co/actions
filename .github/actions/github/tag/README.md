@@ -10,11 +10,6 @@ Create a tag
 | `gpg-password` | The password for the GPG key | true     |         |
 | `tag`          | Tag value                    | true     |         |
 
-## Secrets
-| Name            | Description                                       | Required |
-|-----------------|---------------------------------------------------|----------|
-| `github.token`  | GitHube token. Needs `contents: write` permission | true     |
-
 ## Example
 ```yaml
 jobs:

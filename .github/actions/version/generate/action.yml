@@ -104,8 +104,8 @@ runs:
         assembly-informational-format: '{Major}.{Minor}.{Patch}'
         tag-prefix: v
         commit-message-incrementing: Enabled
-        major-version-bump-message: '^(feat|style|refactor|test)\(GH-\d*\): BREAKING CHANGES(.*\W*)*'
-        minor-version-bump-message: '^(feat|docs|style|refactor|test|chore)\(GH-\d*\):(.*\W*)*'
+        major-version-bump-message: '^(fix|feat|docs|style|refactor|test|chore|perf|build)\(GH-\d*\)!:(.*\W*)*'
+        minor-version-bump-message: '^(feat|docs|style|refactor|test|chore|perf|build)\(GH-\d*\):(.*\W*)*'
         patch-version-bump-message: '^(fix)\(GH-\d*\):(.*\W*)*'
         commit-date-format: 'o'
         update-build-number: true

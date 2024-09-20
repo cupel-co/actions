@@ -6,6 +6,7 @@ Create a GitHub release from a tag
 ## Inputs
 | Name    | Description                            | Required | Default |
 |---------|----------------------------------------|----------|---------|
+| `files` | Files to include in GitHub Release     | false    |         |
 | `tag`   | Tag value                              | true     |         |
 | `token` | GitHub Token to use. This can be a PAT | true     |         |
 

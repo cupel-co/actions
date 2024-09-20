@@ -1,8 +1,16 @@
 name: Release
 description: Create a release from a GitHub tag
 inputs:
+  files:
+    description: Files to include in GitHub Release
+    required: false
+    type: string
   tag:
     description: Tag value
+    required: true
+    type: string
+  token:
+    description: Token for GitHub interactions
     required: true
     type: string
 
@@ -21,6 +29,7 @@ runs:
       uses: softprops/action-gh-release@v2
       with:
         body: "${{ steps.changelog.outputs.changes }}"
-        tag_name: "${{ inputs.tag }}"
+        files: ${{ inputs.files }}
         make_latest: true
-        token: "${{ github.token }}"
+        tag_name: "${{ inputs.tag }}"
+        token: "${{ inputs.token }}"

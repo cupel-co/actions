@@ -27,6 +27,6 @@ runs:
         sarif_file: tfsec.sarif
     - name: Upload
       if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: tfsec.sarif

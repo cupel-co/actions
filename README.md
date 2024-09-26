@@ -1,6 +1,5 @@
 # Actions
-[![Tag](https://github.com/cupel-co/actions/actions/workflows/tag.yml/badge.svg)](https://github.com/cupel-co/actions/actions/workflows/tag.yml)
-[![Deploy](https://github.com/cupel-co/actions/actions/workflows/deploy.yml/badge.svg)](https://github.com/cupel-co/actions/actions/workflows/deploy.yml)
+[![Integrate](https://github.com/cupel-co/actions/actions/workflows/integrate.yml/badge.svg)](https://github.com/cupel-co/actions/actions/workflows/integrate.yml)
 
 A collection of reusable GitHub actions
 

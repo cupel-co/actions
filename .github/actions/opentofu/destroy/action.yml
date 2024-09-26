@@ -40,37 +40,37 @@ runs:
     - name: Install OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
-        tofu_version: "${{ inputs.version }}"
+        tofu_version: '${{ inputs.version }}'
     - name: Init
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }}
+        tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Select workspace
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu workspace select -or-create=true "${{ inputs.workspace }}"
+        tofu workspace select -or-create=true '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Delete infrastructure
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu destroy -auto-approve -no-color -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.destroy-args }}
+        tofu destroy -auto-approve -no-color -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.destroy-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Delete workspace
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
         tofu workspace select default
-        tofu workspace delete "${{ inputs.workspace }}"
+        tofu workspace delete '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

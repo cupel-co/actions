@@ -18,7 +18,7 @@ runs:
       if: ${{ always() }}
       uses: SimonScholz/google-chat-action@main
       with:
-        webhookUrl: "${{ inputs.google-chat-webhook-url }}"
-        title: "Deployed ${{ github.ref_name }} to ${{ inputs.environment }}"
-        subtitle: "${{ github.event.head_commit.message }}"
-        jobStatus: "${{ job.status }}"
+        webhookUrl: '${{ inputs.google-chat-webhook-url }}'
+        title: 'Deployed ${{ github.ref_name }} to ${{ inputs.environment }}'
+        subtitle: '${{ github.event.head_commit.message }}'
+        jobStatus: '${{ job.status }}'

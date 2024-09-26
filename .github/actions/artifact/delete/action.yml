@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: "Delete ${{ inputs.name }}"
+    - name: 'Delete ${{ inputs.name }}'
       uses: geekyeggo/delete-artifact@v5
       with:
-        name: "${{ inputs.name }}"
+        name: '${{ inputs.name }}'

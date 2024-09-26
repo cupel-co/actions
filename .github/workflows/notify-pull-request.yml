@@ -20,4 +20,4 @@ jobs:
         id: generate
         uses: ./.github/actions/notify/pull-request
         with:
-          google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
+          google-chat-webhook-url: '${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}'

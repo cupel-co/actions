@@ -34,10 +34,10 @@ runs:
       shell: bash
     - uses: actions/upload-artifact@v4
       with:
-        name: "${{ inputs.name }}"
-        path: artifact.tar
-        overwrite: "${{ inputs.overwrite }}"
-        retention-days: "${{ inputs.retention-days }}"
+        name: '${{ inputs.name }}'
+        path: 'artifact.tar'
+        overwrite: '${{ inputs.overwrite }}'
+        retention-days: '${{ inputs.retention-days }}'
     - run: |
         rm artifact.tar
       shell: pwsh

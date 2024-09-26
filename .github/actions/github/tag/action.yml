@@ -20,15 +20,15 @@ runs:
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v6
       with:
-        gpg_private_key: ${{ inputs.gpg-key }}
-        passphrase: ${{ inputs.gpg-password }}
+        gpg_private_key: '${{ inputs.gpg-key }}'
+        passphrase: '${{ inputs.gpg-password }}'
         git_user_signingkey: true
         git_tag_gpgsign: true
     - name: Create tag
       shell: pwsh
       run: |
-        git tag -s "${{ inputs.tag }}" -m "${{ inputs.tag }}"
+        git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
     - name: Push tag
       shell: pwsh
       run: |
-        git push origin tag "${{ inputs.tag }}"
+        git push origin tag '${{ inputs.tag }}'

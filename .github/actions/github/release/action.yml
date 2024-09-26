@@ -22,14 +22,14 @@ runs:
       uses: requarks/changelog-action@v1
       with:
         includeInvalidCommits: true
-        token: "${{ github.token }}"
-        tag: "${{ inputs.tag }}"
+        token: '${{ github.token }}'
+        tag: '${{ inputs.tag }}'
         writeToFile: false
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        body: "${{ steps.changelog.outputs.changes }}"
+        body: '${{ steps.changelog.outputs.changes }}'
         files: ${{ inputs.files }}
         make_latest: true
-        tag_name: "${{ inputs.tag }}"
-        token: "${{ inputs.token }}"
+        tag_name: '${{ inputs.tag }}'
+        token: '${{ inputs.token }}'

@@ -90,15 +90,15 @@ runs:
       shell: pwsh
       run: |
         if ('${{ inputs.flow-type }}' -ne 'GITHUB_FLOW') {
-          Write-Error "Invalid flow-type: ${{ inputs.flow-type }}. Only GITHUB_FLOW is supported at this time."
-          throw "Exiting due to invalid flow-type"
+          Write-Error 'Invalid flow-type: ${{ inputs.flow-type }}. Only GITHUB_FLOW is supported at this time.'
+          throw 'Exiting due to invalid flow-type'
         }
 
     - name: Create GitVersion config file for GITHUB_FLOW
       shell: pwsh
       if: ${{ inputs.flow-type == 'GITHUB_FLOW' }}
       run: |
-        @"
+        @'
         assembly-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-file-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-informational-format: '{Major}.{Minor}.{Patch}'
@@ -140,7 +140,7 @@ runs:
         pre-release-weight: 60000
         prevent-increment:
           when-current-commit-tagged: true
-        "@ | Out-File -FilePath "${{ runner.temp }}/GitVersion.yml" -Encoding utf8
+        '@ | Out-File -FilePath '${{ runner.temp }}/GitVersion.yml' -Encoding utf8
 
     - name: Install
       uses: gittools/actions/gitversion/setup@v1.1.1
@@ -150,9 +150,9 @@ runs:
       id: generate
       uses: gittools/actions/gitversion/execute@v1.1.1
       with:
-        targetPath: ./
+        targetPath: './'
         disableCache: true
         useConfigFile: true
-        configFilePath: ${{ runner.temp }}/GitVersion.yml
+        configFilePath: '${{ runner.temp }}/GitVersion.yml'
       env:
-        BUILD_NUMBER: "${{ github.run_number }}"
+        BUILD_NUMBER: '${{ github.run_number }}'

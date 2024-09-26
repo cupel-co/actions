@@ -16,15 +16,15 @@ runs:
   steps:
     - uses: actions/download-artifact@v4
       with:
-        name: "${{ inputs.name }}"
-        path: "${{ inputs.path }}"
+        name: '${{ inputs.name }}'
+        path: '${{ inputs.path }}'
 
     - run: |
         tar -xvf artifact.tar
-      working-directory: "${{ inputs.path }}"
+      working-directory: '${{ inputs.path }}'
       shell: pwsh
 
     - run: |
         rm artifact.tar
-      working-directory: "${{ inputs.path }}"
+      working-directory: '${{ inputs.path }}'
       shell: pwsh

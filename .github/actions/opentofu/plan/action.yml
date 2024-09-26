@@ -40,28 +40,28 @@ runs:
     - name: Install OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
-        tofu_version: "${{ inputs.version }}"
+        tofu_version: '${{ inputs.version }}'
     - name: Init
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu init -no-color -lockfile=readonly -lock=false -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.init-args }}
+        tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Select workspace
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu workspace select -or-create=true "${{ inputs.workspace }}"
+        tofu workspace select -or-create=true '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Plan
       shell: pwsh
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu plan -no-color -out="plan.tfplan" -var "use_primary_backend=${{ inputs.use-primary-backend }}" ${{ inputs.plan-args }}
+        tofu plan -no-color -out='plan.tfplan' -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.plan-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

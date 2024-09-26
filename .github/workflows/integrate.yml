@@ -7,7 +7,7 @@ on:
 
 concurrency:
   cancel-in-progress: false
-  group: ${{ github.workflow }}-${{ github.ref_name }}
+  group: "${{ github.workflow }}-${{ github.ref_name }}"
 
 jobs:
   generate:
@@ -47,18 +47,18 @@ jobs:
       - name: Tag
         uses: ./.github/actions/github/tag
         with:
-          gpg-key: "${{ secrets.GH_GPG_PRIVATE_KEY }}"
-          gpg-password: "${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}"
-          tag: ${{ env.tag }}
+          gpg-key: '${{ secrets.GH_GPG_PRIVATE_KEY }}'
+          gpg-password: '${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}'
+          tag: '${{ env.tag }}'
         
       - name: Release
         uses: ./.github/actions/github/release
         with:
-          tag: ${{ env.tag }}
-          token: ${{ secrets.GH_RELEASE_PAT }}
+          tag: '${{ env.tag }}'
+          token: '${{ secrets.GH_RELEASE_PAT }}'
 
       - name: Notify
         uses: ./.github/actions/notify/release
         with:
-          google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
-          tag: ${{ env.tag }}
+          google-chat-webhook-url: '${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}'
+          tag: '${{ env.tag }}'

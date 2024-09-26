@@ -22,12 +22,12 @@ runs:
     - name: Install OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
-        tofu_version: "${{ inputs.version }}"
+        tofu_version: '${{ inputs.version }}'
     - name: Apply
       shell: pwsh
       run: |
         ls -al
-        tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} "plan.tfplan"
+        tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} 'plan.tfplan'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

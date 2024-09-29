@@ -21,6 +21,7 @@ runs:
       id: changelog
       uses: requarks/changelog-action@v1
       with:
+        excludeTypes: ''
         includeInvalidCommits: true
         token: '${{ github.token }}'
         tag: '${{ inputs.tag }}'

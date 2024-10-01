@@ -10,6 +10,10 @@ inputs:
     description: The Webhook URL for the chat to send the message to
     required: true
     type: string
+  subtitle:
+    description: The subtitle of the message
+    required: true
+    type: string
     
 runs:
   using: composite
@@ -20,5 +24,5 @@ runs:
       with:
         webhookUrl: '${{ inputs.google-chat-webhook-url }}'
         title: 'Deployed ${{ github.ref_name }} to ${{ inputs.environment }}'
-        subtitle: '${{ github.event.head_commit.message }}'
+        subtitle: '${{ inputs.subtitle }}'
         jobStatus: '${{ job.status }}'

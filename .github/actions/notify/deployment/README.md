@@ -8,6 +8,7 @@ Send a notification when a deployment has finished.
 |---------------------------|----------------------------------------------------------|----------|---------|
 | `environment`             | The name of the environment the changes were deployed to | true     |         |
 | `google-chat-webhook-url` | The Webhook URL for the chat to send the message to      | true     |         |
+| `subtitle`                | The subtitle of the message                              | true     |         |
 
 ## Example
 ```yaml
@@ -23,4 +24,5 @@ jobs:
         with:
           environment: "Production"
           google-chat-webhook-url: "${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}"
+          subtitle: "Workspace: github-team-support"
 ```

@@ -11,6 +11,10 @@ A collection of reusable GitHub actions
 * GitHub
   * [release](.github/actions/github/release/README.md)
   * [tag](.github/actions/github/tag/README.md)
+* Infracost
+  * [breakdown](.github/actions/infracost/breakdown/README.md)
+  * [comment](.github/actions/infracost/comment/README.md)
+  * [diff](.github/actions/infracost/diff/README.md)
 * Notify
   * [deployment](.github/actions/notify/deployment/README.md)
   * [pull-request](.github/actions/notify/pull-request/README.md)

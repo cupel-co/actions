@@ -13,7 +13,7 @@ inputs:
   output-path:
     description: The file path for the JSON file
     default: ./infracost.json
-    required: true
+    required: false
     type: string
   template:
     description: The infracost template
@@ -26,7 +26,7 @@ inputs:
   version:
     description: The version of Infracost to install
     default: 0.10.x
-    required: true
+    required: false
     type: string
 
 runs:

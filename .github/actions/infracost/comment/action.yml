@@ -8,7 +8,7 @@ inputs:
   behaviour:
     description: The behaviour for the comment
     default: update
-    required: true
+    required: false
     type: choice
     options:
       - delete-and-new

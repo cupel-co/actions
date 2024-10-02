@@ -77,23 +77,16 @@ outputs:
 
 inputs:
   flow-type:
-    description: 'The flow type to use (GITHUB_FLOW)'
+    description: 'The flow type to use'
     required: true
     default: GITHUB_FLOW
-    type: string
+    type: choice
+    options:
+      - GITHUB_FLOW
 
 runs:
   using: composite
   steps:
-    - name: Set flow type
-      id: set_flow
-      shell: pwsh
-      run: |
-        if ('${{ inputs.flow-type }}' -ne 'GITHUB_FLOW') {
-          Write-Error 'Invalid flow-type: ${{ inputs.flow-type }}. Only GITHUB_FLOW is supported at this time.'
-          throw 'Exiting due to invalid flow-type'
-        }
-
     - name: Create GitVersion config file for GITHUB_FLOW
       shell: pwsh
       if: ${{ inputs.flow-type == 'GITHUB_FLOW' }}

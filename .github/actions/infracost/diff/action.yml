@@ -1,0 +1,50 @@
+name: Diff
+description: Check the diff between the 2 breakdowns
+inputs:
+  api-key:
+    description: Infracost API Key
+    required: true
+    type: string
+  base-breakdown-path:
+    description: The path to the breakdown file for the base state.
+    required: true
+    type: string
+  currency:
+    description: The currency to show estimates in
+    default: AUD
+    required: false
+    type: string
+  head-breakdown-path:
+    description: The path to the breakdown file for the head state.
+    required: true
+    type: string
+  output-path:
+    description: The file path for the JSON file
+    default: ./infracost.json
+    required: false
+    type: string
+  version:
+    description: The version of Infracost to install
+    default: 0.10.x
+    required: false
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v3
+      with:
+        api-key: ${{ inputs.api-key }}
+        currency: ${{ inputs.currency }}
+        version: ${{ inputs.version }}
+    - name: Diff
+      shell: pwsh
+      run: |
+        infracost diff `
+          --compare-to ${{ inputs.base-breakdown-path }} `
+          --path ${{ inputs.head-breakdown-path }} 
+          --format json `
+          --out-file ${{ inputs.output-path }} `
+          --show-skipped `
+          --no-cache

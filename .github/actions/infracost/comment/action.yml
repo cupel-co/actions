@@ -1,0 +1,51 @@
+name: Comment
+description: Add a comment to the PR in GitHub
+inputs:
+  api-key:
+    description: Infracost API Key
+    required: true
+    type: string
+  behaviour:
+    description: The behaviour for the comment
+    default: update
+    required: true
+    type: choice
+    options:
+      - delete-and-new
+      - hide-and-new
+      - new
+      - update
+  currency:
+    description: The currency to show estimates in
+    default: AUD
+    required: false
+    type: string
+  path:
+    description: The path to the JSON report file
+    required: true
+    type: string
+  version:
+    description: The version of Infracost to install
+    default: 0.10.x
+    required: false
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v3
+      with:
+        api-key: ${{ inputs.api-key }}
+        currency: ${{ inputs.currency }}
+        version: ${{ inputs.version }}
+    - name: Comment
+      shell: pwsh
+      run: |
+        infracost comment github `
+          --path=${{ inputs.path }} `
+          --repo=$GITHUB_REPOSITORY `
+          --pull-request=$PR_NUMBER `
+          --github-token=$GITHUB_TOKEN `
+          --behavior=${{ inputs.behaviour }} `
+          --show-all-projects

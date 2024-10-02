@@ -16,12 +16,12 @@ Generate a cost difference between the old and new change
 ## Example
 ```yaml
 jobs:
-  generate:
-    name: Generate
+  diff:
+    name: Diff
     runs-on: ubuntu-latest
     steps:
       - name: Diff
-        uses: cupel-co/actions/.github/actions/infracost/breakdown@vX.X.X
+        uses: cupel-co/actions/.github/actions/infracost/diff@vX.X.X
         with:
           api-key: "${{ secrets.INFRACOST_API_KEY }}"
           base-breakdown-path: /tmp/main.json

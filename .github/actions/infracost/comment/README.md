@@ -15,12 +15,12 @@ Add a comment to a GitHub PR
 ## Example
 ```yaml
 jobs:
-  generate:
-    name: Generate
+  comment:
+    name: Comment
     runs-on: ubuntu-latest
     steps:
-      - name: Diff
-        uses: cupel-co/actions/.github/actions/infracost/breakdown@vX.X.X
+      - name: Comment
+        uses: cupel-co/actions/.github/actions/infracost/comment@vX.X.X
         with:
           api-key: "${{ secrets.INFRACOST_API_KEY }}"
           base-breakdown-path: /tmp/main.json

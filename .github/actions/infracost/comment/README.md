@@ -7,7 +7,7 @@ Add a comment to a GitHub PR
 | Name        | Description                         | Required | Default  |
 |-------------|-------------------------------------|----------|----------|
 | `api-key`   | Infracost API Key                   | true     |          |
-| `behaviour` | The behaviour for the comment       | true     | `update` |
+| `behaviour` | The behaviour for the comment       | false    | `update` |
 | `currency`  | The currency to show estimates in   | false    | `AUD`    |
 | `path`      | The path to the JSON report file    | true     |          |
 | `version`   | The version of Infracost to install | false    | `0.10.x` |
@@ -23,9 +23,8 @@ jobs:
         uses: cupel-co/actions/.github/actions/infracost/comment@vX.X.X
         with:
           api-key: "${{ secrets.INFRACOST_API_KEY }}"
-          base-breakdown-path: /tmp/main.json
+          behaviour: update
           currency: AUD
-          head-breakdown-path: /tmp/feature.json
-          output-path: /tmp/diff.json
+          path: /tmp/diff.json
           version: 0.10.x
 ```

@@ -1,0 +1,23 @@
+name: PR Opened
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  pull-request:
+    name: Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Update
+        id: generate
+        uses: ./actions/.github/actions/pull-request/update
+        with:
+          environment: Preview

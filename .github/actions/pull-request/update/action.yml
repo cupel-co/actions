@@ -22,7 +22,7 @@ runs:
           Write-Output "Issue Number: $number"
           "number=$number" >> $env:GITHUB_OUTPUT
         
-          $title = $(gh issue view $issueNumber --repo '${{ github.repository }}' --jq '.title' --json title)
+          $title = $(gh issue view $number --repo '${{ github.repository }}' --jq '.title' --json title)
           Write-Output "Issue Title: $title"
           "title=$title" >> $env:GITHUB_OUTPUT
         } else {

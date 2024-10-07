@@ -1,0 +1,27 @@
+name: Update PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  pull-request:
+    name: Pull Request
+    runs-on: ubuntu-latest
+    concurrency:
+      cancel-in-progress: false
+      group: "${{ github.workflow }}-${{ github.ref_name }}"
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Update
+        uses: ./.github/actions/pull-request/update
+        with:
+          environment: Preview

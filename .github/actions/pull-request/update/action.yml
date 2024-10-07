@@ -1,0 +1,66 @@
+﻿name: Update PR Description
+description: Update PR Description
+inputs:
+  environment:
+    description: The environment name
+    required: true
+outputs:
+  description:
+    description: The pull request description with replaced values
+    value: ${{ steps.replace-values.outputs.description }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get issue details
+      id: get-issue-details
+      shell: pwsh
+      run: |
+        $branch="${{ github.head_ref }}"
+        if ($branch -match "GH-(\d+)-") {
+          $number = $matches[1]
+          Write-Output "Issue Number: $number"
+          "number=$number" >> $env:GITHUB_OUTPUT
+        
+          $title = $(gh issue view $number --repo '${{ github.repository }}' --jq '.title' --json title)
+          Write-Output "Issue Title: $title"
+          "title=$title" >> $env:GITHUB_OUTPUT
+        } else {
+          Write-Output "::error No issue number found in branch name"
+          exit 1
+        }
+      env:
+        GH_TOKEN: ${{ github.token }}
+    - name: Replace values
+      id: replace-values
+      shell: pwsh
+      run: |
+        $repository="${{ github.repository }}"
+        $branch="${{ github.head_ref }}"
+        $environment="${{ inputs.environment }}"
+        
+        $issueNumber="${{ steps.get-issue-details.outputs.number }}"
+        $issueTitle="${{ steps.get-issue-details.outputs.title }}"
+        
+        $prNumber="${{ github.event.pull_request.number }}"
+        $prTitle="${{ github.event.pull_request.title }}"
+        $prDescription="${{ github.event.pull_request.body }}"
+        
+        $description = $prDescription -replace "{{REPOSITORY}}", $repository `
+          -replace "{{BRANCH_NAME}}", $branch `
+          -replace "{{ENVIRONMENT}}", $environment `
+          -replace "{{ISSUE_NUMBER}}", $issueNumber `
+          -replace "{{ISSUE_TITLE}}", $issueTitle `
+          -replace "{{PULL_REQUEST_NUMBER}}", $prNumber `
+          -replace "{{PULL_REQUEST_TITLE}}", $prTitle
+        
+        "description<<EOF" >> $env:GITHUB_OUTPUT
+        "$description" >> $env:GITHUB_OUTPUT
+        "EOF" >> $env:GITHUB_OUTPUT
+
+    - name: Apply changes
+      shell: pwsh
+      run: |
+        gh pr edit ${{ github.event.pull_request.number }} --body '${{ steps.replace-values.outputs.description }}' --repo '${{ github.repository }}'
+      env:
+        GH_TOKEN: ${{ github.token }}

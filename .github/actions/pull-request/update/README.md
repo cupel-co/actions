@@ -4,15 +4,15 @@ Action: [update](./action.yml)
 Replace template variables in the Pull Request description and then update the description
 
 ## Supported Values
-| Name                  | Description                                                       |
-|-----------------------|-------------------------------------------------------------------|
-| `BRANCH_NAME`         | The name of the branch                                            |
-| `ENVIRONMENT`         | The environment                                                   |
-| `ISSUE_NUMBER`        | The number of the issue                                           |
-| `ISSUE_TITLE`         | The title of the issue                                            |
-| `PULL_REQUEST_NUMBER` | The number of the pull request                                    |
-| `PULL_REQUEST_TITLE`  | The pull request title                                            |
-| `REPOSITORY`          | The name of the repository. This includes the the owner name too. | 
+| Name                      | Description                                                       |
+|---------------------------|-------------------------------------------------------------------|
+| `{{BRANCH_NAME}}`         | The name of the branch                                            |
+| `{{ENVIRONMENT}}`         | The environment                                                   |
+| `{{ISSUE_NUMBER}}`        | The number of the issue                                           |
+| `{{ISSUE_TITLE}}`         | The title of the issue                                            |
+| `{{PULL_REQUEST_NUMBER}}` | The number of the pull request                                    |
+| `{{PULL_REQUEST_TITLE}}`  | The pull request title                                            |
+| `{{REPOSITORY}}`          | The name of the repository. This includes the the owner name too. | 
 
 ## Inputs
 | Name          | Description          | Required | Default Value |
@@ -43,4 +43,6 @@ jobs:
     steps:
       - name: Update
         uses: cupel-co/actions/.github/actions/pull-request/update@vx.x.x
+        with:
+          environment: Preview
 ```

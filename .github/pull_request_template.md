@@ -1,12 +1,8 @@
-# GH-{{ISSUE_IDENTIFIER}} - {{ISSUE_TITLE}}
+# #{{ISSUE_IDENTIFIER}} - {{ISSUE_TITLE}}
 
-[![Preview](https://github.com/cupel-co/actions/actions/workflows/preview.yml/badge.svg?branch={{BRANCH_NAME}}&event=pull_request)](https://github.com/cupel-co/actions/actions/workflows/preview.yml?query=branch%3A{{BRANCH_NAME}})
+[![Preview](https://github.com/{{REPOSITORY}}/actions/workflows/preview.yml/badge.svg?branch={{BRANCH_NAME}}&event=pull_request)](https://github.com/{{REPOSITORY}}/actions/workflows/preview.yml?query=branch%3A{{BRANCH_NAME}})
 
 ## Description
 * 
 * 
 * 
-
-## Testing
-- [ ] Planned changes for all workspaces
-- [ ] Reviewed proposed changes

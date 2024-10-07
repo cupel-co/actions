@@ -17,7 +17,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Update
-        id: generate
-        uses: ./actions/.github/actions/pull-request/update
+        uses: ./.github/actions/pull-request/update
         with:
           environment: Preview

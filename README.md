@@ -23,6 +23,8 @@ A collection of reusable GitHub actions
   * [apply](.github/actions/opentofu/apply/README.md)
   * [plan](.github/actions/opentofu/plan/README.md)
   * [destroy](.github/actions/opentofu/destroy/README.md)
+* Pull Request
+  * [update](.github/actions/pull-request/update/README.md)
 * [tfsec](.github/actions/tfsec/README.md)
 * [tflint](.github/actions/tflint/README.md)
 * Version

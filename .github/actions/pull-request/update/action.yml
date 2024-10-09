@@ -44,7 +44,9 @@ runs:
         
         $prNumber="${{ github.event.pull_request.number }}"
         $prTitle="${{ github.event.pull_request.title }}"
-        $prDescription="${{ github.event.pull_request.body }}"
+        $prDescription = @'
+        ${{ github.event.pull_request.body }}
+        '@
         
         $description = $prDescription -replace "{{REPOSITORY}}", $repository `
           -replace "{{BRANCH_NAME}}", $branch `
@@ -58,9 +60,8 @@ runs:
         "$description" >> $env:GITHUB_OUTPUT
         "EOF" >> $env:GITHUB_OUTPUT
 
-    - name: Apply changes
-      shell: pwsh
-      run: |
-        gh pr edit ${{ github.event.pull_request.number }} --body '${{ steps.replace-values.outputs.description }}' --repo '${{ github.repository }}'
-      env:
-        GH_TOKEN: ${{ github.token }}
+    - name: Update Pull Request Description
+      uses: vblagoje/update-pr@v1
+      with:
+        pr-number: ${{ github.event.pull_request.number }}
+        pr-body: '${{ steps.replace-values.outputs.description }}'

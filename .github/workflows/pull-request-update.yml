@@ -6,15 +6,18 @@ on:
       - opened
       - reopened
 
+concurrency:
+  cancel-in-progress: false
+  group: '${{ github.workflow }}-${{ github.ref_name }}'
+
 jobs:
   pull-request:
     name: Pull Request
     runs-on: ubuntu-latest
-    concurrency:
-      cancel-in-progress: false
-      group: "${{ github.workflow }}-${{ github.ref_name }}"
     permissions:
+      issues: read
       pull-requests: write
+      repository-projects: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -24,6 +24,18 @@ inputs:
     description: The path to the JSON report file
     required: true
     type: string
+  pull-request-number:
+    description: The PR number
+    required: true
+    type: number
+  repository:
+    description: The repository name
+    required: true
+    type: string
+  token:
+    description: The GitHub token
+    required: true
+    type: string
   version:
     description: The version of Infracost to install
     default: 0.10.x
@@ -44,8 +56,8 @@ runs:
       run: |
         infracost comment github `
           --path=${{ inputs.path }} `
-          --repo=$GITHUB_REPOSITORY `
-          --pull-request=$PR_NUMBER `
-          --github-token=$GITHUB_TOKEN `
+          --repo=${{ inputs.repository }} `
+          --pull-request=${{ inputs.pull-request-number }} `
+          --github-token=${{ inputs.token }} `
           --behavior=${{ inputs.behaviour }} `
           --show-all-projects

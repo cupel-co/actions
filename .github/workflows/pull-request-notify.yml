@@ -6,6 +6,10 @@ on:
       - opened
       - reopened
 
+concurrency:
+  cancel-in-progress: false
+  group: '${{ github.workflow }}-${{ github.ref_name }}'
+
 jobs:
   pull-request:
     name: Notify

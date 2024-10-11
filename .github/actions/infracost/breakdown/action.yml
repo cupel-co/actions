@@ -44,24 +44,24 @@ runs:
         $template = ""
         
         if ('${{ inputs.template }}' -ne '') {
-          $template = @"
-          ${{ inputs.template }}
-          "@
+        $template = @"
+        ${{ inputs.template }}
+        "@
         } else {
-          $template = @"
-          version: 0.1
-          projects:
-          {{- range `$project := matchPaths "infrastructure/variables/:env.tfvars" }}
-              - path: "./infrastructure"
-                name: "{{ `$project.env }}"
-                terraform_workspace: "${{ inputs.workspace-prefix }}{{ `$project.env }}"
-                terraform_var_files:
-                  - "{{ relPath "./infrastructure" `$project._path }}"
-                dependency_paths:
-                  - "**"
-                  - "{{ relPath "./infrastructure" `$project._path }}"
-          {{- end }}
-          "@
+        $template = @"
+        version: 0.1
+        projects:
+        {{- range `$project := matchPaths "infrastructure/variables/:env.tfvars" }}
+            - path: "./infrastructure"
+              name: "{{ `$project.env }}"
+              terraform_workspace: "${{ inputs.workspace-prefix }}{{ `$project.env }}"
+              terraform_var_files:
+                - "{{ relPath "./infrastructure" `$project._path }}"
+              dependency_paths:
+                - "**"
+                - "{{ relPath "./infrastructure" `$project._path }}"
+        {{- end }}
+        "@
         }
 
         infracost generate config --out-file infracost.yml --template $template 

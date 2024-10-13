@@ -19,10 +19,12 @@ inputs:
     description: The infracost template
     required: false
     type: string
+    default: ""
   workspace-prefix:
     description: The prefix for the workspace name
     required: false
     type: string
+    default: ""
   version:
     description: The version of Infracost to install
     default: 0.10.x

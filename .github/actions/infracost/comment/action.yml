@@ -17,7 +17,7 @@ inputs:
       - update
   comment-identifier:
     description: A unique identifier to for the comment added by this implementation
-    default: infracost
+    default: comment
     required: false
     type: string
   currency:

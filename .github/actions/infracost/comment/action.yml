@@ -15,6 +15,11 @@ inputs:
       - hide-and-new
       - new
       - update
+  comment-identifier:
+    description: A unique identifier to for the comment added by this implementation
+    default: infracost
+    required: false
+    type: string
   currency:
     description: The currency to show estimates in
     default: AUD
@@ -60,4 +65,5 @@ runs:
           --pull-request=${{ inputs.pull-request-number }} `
           --github-token=${{ inputs.token }} `
           --behavior=${{ inputs.behaviour }} `
-          --show-all-projects
+          --show-all-projects `
+          --tag=infracost-${{ inputs.comment-identifier }}

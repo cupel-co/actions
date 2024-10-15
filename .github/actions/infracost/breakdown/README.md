@@ -10,8 +10,9 @@ Generate a cost breakdown for the specified infrastructure
 | `currency`         | The currency to show estimates in   | false    | `AUD`              |
 | `output-path`      | The file path for the JSON file     | false    | `./infracost.json` |
 | `template`         | The infracost template              | false    |                    |
-| `workspace-prefix` | The prefix for the workspace name   | false    |                    |
+| `usage`            | The usage file contents             | false    |                    |
 | `version`          | The version of Infracost to install | false    | `0.10.x`           |
+| `workspace-prefix` | The prefix for the workspace name   | false    |                    |
 
 ## Example
 ```yaml

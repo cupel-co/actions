@@ -20,8 +20,8 @@ inputs:
     required: false
     type: string
     default: ""
-  workspace-prefix:
-    description: The prefix for the workspace name
+  usage:
+    description: The usage file contents
     required: false
     type: string
     default: ""
@@ -30,6 +30,11 @@ inputs:
     default: 0.10.x
     required: false
     type: string
+  workspace-prefix:
+    description: The prefix for the workspace name
+    required: false
+    type: string
+    default: ""
 
 runs:
   using: composite
@@ -67,7 +72,26 @@ runs:
         }
 
         infracost generate config --out-file infracost.yml --template $template 
+    - name: Generate usage file
+      shell: pwsh
+      run: |
+        $usage = ""
+        
+        if ('${{ inputs.usage }}'.Trim() -ne '') {
+        $usage = @"
+        ${{ inputs.usage }}
+        "@ | Out-File -FilePath usage.yml
+        } else {
+        $usage = @"
+        version: 0.1
+        "@ | Out-File -FilePath usage.yml
+        }
     - name: Breakdown
       shell: pwsh
       run: |
-        infracost breakdown --config-file infracost.yml --out-file ${{ inputs.output-path }} --format json --fields all
+        infracost breakdown `
+          --config-file infracost.yml `
+          --out-file ${{ inputs.output-path }} `
+          --format json `
+          --fields all `
+          --sync-usage-file usage.yml

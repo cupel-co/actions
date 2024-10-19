@@ -94,4 +94,4 @@ runs:
           --out-file ${{ inputs.output-path }} `
           --format json `
           --fields all `
-          --sync-usage-file usage.yml
+          --usage-file usage.yml

@@ -18,19 +18,19 @@ runs:
       id: get-issue-details
       shell: bash
       run: |
-        $branch="${{ github.head_ref }}"
-        if ($branch -match "GH-(\d+)-") {
-          $number = $matches[1]
-          Write-Output "Issue Number: $number"
-          "number=$number" >> $env:GITHUB_OUTPUT
+        shopt -s nocasematch
+        if [[ "$branch" =~ GH-([0-9]+) ]]; then
+          number="${BASH_REMATCH[1]}"
+            echo "Issue Number: $number"
+          echo "number=$number" >> "$GITHUB_OUTPUT"
         
-          $title = $(gh issue view $number --repo '${{ github.repository }}' --jq '.title' --json title)
-          Write-Output "Issue Title: $title"
-          "title=$title" >> $env:GITHUB_OUTPUT
-        } else {
-          Write-Output "::error No issue number found in branch name"
+          title=$(gh issue view "$number" --repo "${{ github.repository }}" --json title --jq '.title')
+          echo "Issue Title: $title"
+          echo "title=$title" >> "$GITHUB_OUTPUT"
+        else
+          echo "::error::No issue number found in branch name"
           exit 1
-        }
+        fi
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Replace values

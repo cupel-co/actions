@@ -1,0 +1,16 @@
+name: Docker Push
+description: Pushes a Docker image to a registry
+author: Cupel
+
+inputs:
+  image-identifier:
+    description: The image identifier to push
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Push ${{ inputs.image-identifier }}
+      shell: bash
+      run: |
+        exec docker push ${{ inputs.image-identifier }}

@@ -1,0 +1,38 @@
+name: Docker Build Target
+description: Build dockerfile target
+author: Cupel
+
+inputs:
+  arguments:
+    description: Additional arguments for the build command
+    required: false
+  dockerfile:
+    description: The dockerfile to build
+    required: true
+    default: Dockerfile
+  name:
+    description: The name of the image
+    required: true
+  tag:
+    description: The tag of the image
+    required: true
+  target:
+    description: The target to build
+    required: true
+  working-directory:
+    description: Directory that contains the dockerfile
+    default: ./
+    required: true
+outputs:
+  image-identifier:
+    description: The image identifier
+    value: '${{inputs.name}}:${{inputs.tag}}'
+
+runs:
+  using: composite
+  steps:
+    - name: Build ${{ inputs.target }}
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
+      run: |
+        exec docker build -f ${{ inputs.dockerfile }} --target ${{ inputs.target }} -t ${{ inputs.name }}:${{ inputs.tag }}  ${{ inputs.arguments }} .

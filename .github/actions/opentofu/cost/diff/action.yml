@@ -1,0 +1,51 @@
+name: OpenTofu Cost Diff
+description: Check the diff between the 2 breakdowns
+author: Cupel
+
+inputs:
+  api-key:
+    description: Infracost API Key
+    required: true
+  base-breakdown-path:
+    description: The path to the breakdown file for the base state.
+    required: true
+  currency:
+    description: The currency to show estimates in
+    default: AUD
+    required: false
+  head-breakdown-path:
+    description: The path to the breakdown file for the head state.
+    required: true
+  output-path:
+    description: The file path for the JSON file
+    default: ./infracost.json
+    required: false
+  version:
+    description: The version of Infracost to install
+    default: 0.10.x
+    required: false
+  working-directory:
+    description: Directory that contains the OpenTofu code.
+    default: ./infrastructure
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v3
+      with:
+        api-key: ${{ inputs.api-key }}
+        currency: ${{ inputs.currency }}
+        version: ${{ inputs.version }}
+    - name: Diff
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
+      run: |
+        exec infracost diff \
+          --compare-to ${{ inputs.base-breakdown-path }} \
+          --path ${{ inputs.head-breakdown-path }} \
+          --format json \
+          --out-file ${{ inputs.output-path }} \
+          --show-skipped \
+          --no-cache

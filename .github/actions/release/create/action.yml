@@ -1,0 +1,40 @@
+name: Release
+description: Create a release from a GitHub tag
+author: Cupel
+
+inputs:
+  files:
+    description: Files to include in GitHub Release
+    required: false
+  tag:
+    description: Tag value
+    required: true
+  token:
+    description: Token for GitHub interactions
+    required: true
+outputs:
+  changes:
+    description: The changes for the release
+    value: '${{ steps.changelog.outputs.changes }}'
+
+runs:
+  using: composite
+  steps:
+    - name: Generate changelog
+      id: changelog
+      uses: requarks/changelog-action@v1
+      with:
+        excludeTypes: ''
+        includeInvalidCommits: true
+        token: '${{ inputs.token }}'
+        tag: '${{ inputs.tag }}'
+        useGitmojis: false
+        writeToFile: false
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        body: '${{ steps.changelog.outputs.changes }}'
+        files: ${{ inputs.files }}
+        make_latest: true
+        tag_name: '${{ inputs.tag }}'
+        token: '${{ inputs.token }}'

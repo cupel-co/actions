@@ -22,6 +22,6 @@ jobs:
           fetch-tags: true
       - name: Google Chat
         id: generate
-        uses: ./.github/actions/notify/pull-request
+        uses: ./.github/actions/pull-request/notify
         with:
           google-chat-webhook-url: '${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}'

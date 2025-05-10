@@ -1,0 +1,19 @@
+﻿name: Notify PR
+description: Send a notification when a PR has been raised
+author: Cupel
+
+inputs:
+  google-chat-webhook-url:
+    description: The Webhook URL for the chat to send the message to
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Notify
+      if: ${{ always() }}
+      uses: SimonScholz/google-chat-action@main
+      with:
+        webhookUrl: '${{ inputs.google-chat-webhook-url }}'
+        title: 'Pull request ${{ github.event.action }}'
+        subtitle: '${{ github.event.pull_request.title }}'

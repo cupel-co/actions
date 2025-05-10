@@ -80,5 +80,5 @@ jobs:
         id: generate
         uses: cupel-co/actions/.github/actions/version/generate@vX.X.X
         with:
-          
+          flow-type: GITHUB_FLOW
 ```

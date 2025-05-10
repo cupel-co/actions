@@ -1,0 +1,92 @@
+name: OpenTofu Cost Breakdown
+description: Breakdown infrastructure costs with Infracost
+author: Cupel
+
+inputs:
+  api-key:
+    description: Infracost API Key
+    required: true
+  currency:
+    description: The currency to show estimates in
+    default: AUD
+    required: false
+  output-path:
+    description: The file path for the JSON file
+    default: ./infracost.json
+    required: false
+  template:
+    description: The infracost template
+    required: false
+    default: ""
+  usage:
+    description: The usage file contents
+    required: false
+    default: ""
+  version:
+    description: The version of Infracost to install
+    default: 0.10.x
+    required: false
+  working-directory:
+    description: Directory that contains the OpenTofu code.
+    default: ./infrastructure
+    required: true
+  workspace-prefix:
+    description: The prefix for the workspace name
+    required: false
+    default: ""
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup Infracost
+      uses: infracost/actions/setup@v3
+      with:
+        api-key: '${{ inputs.api-key }}'
+        currency: '${{ inputs.currency }}'
+        version: '${{ inputs.version }}'
+    - name: Generate config
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
+      run: |
+        template_content=""
+        
+        if [[ -n "${{ inputs.template }}" ]]; then
+          template_content="${{ inputs.template }}"
+        else
+          read -r -d '' template_content << 'EOF'
+        version: 0.1
+        projects:
+        {{- range $project := matchPaths "variables/:env.tfvars" }}
+            - path: "./"
+              name: "${{ inputs.workspace-prefix }}{{ $project.env }}"
+              terraform_workspace: "${{ inputs.workspace-prefix }}{{ $project.env }}"
+              terraform_var_files:
+                - "{{ relPath "./" $project._path }}"
+              dependency_paths:
+                - "**"
+                - "{{ relPath "./" $project._path }}"
+        {{- end }}
+        EOF
+        fi
+
+        exec infracost generate config --out-file infracost.yml --template "$template_content"
+    - name: Generate usage file
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
+      run: |
+        if [[ -n "${{ inputs.usage }}" ]]; then
+          printf '%s\n' "${{ inputs.usage }}" > usage.yml
+        else
+          printf '%s\n' "version: 0.1" > usage.yml
+        fi
+    - name: Breakdown
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
+      run: |
+        exec infracost breakdown \
+          --config-file infracost.yml \
+          --out-file "${{ inputs.output-path }}" \
+          --format json \
+          --fields all \
+          --usage-file usage.yml

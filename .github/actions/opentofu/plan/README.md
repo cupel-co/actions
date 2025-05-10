@@ -13,6 +13,11 @@ The OpenTofu Plan GitHub Action installs a specific version of OpenTofu, initial
 | `working-directory`   | Directory containing the OpenTofu code.                             | true     | `'./infrastructure'` |
 | `workspace`           | The name of the workspace. If it doesn't exist, it will be created. | true     |                      |
 
+## Outputs
+| Name      | Description                                                                                         |
+|-----------|-----------------------------------------------------------------------------------------------------|
+| `CHANGES` | Indicates if the plan detected changes (true) or not (false). Value is empty string if plan failed. |
+
 ## Example
 ```yaml
 jobs:
@@ -34,7 +39,7 @@ jobs:
           role-to-assume: ${{ vars.OIDC_ROLE_ARN }}
           aws-region: ap-southeast-2
       - name: Plan
-        uses: cupel-co/actions/.github/actions/opentofu/plan@vx.x.x
+        uses: cuepl-co/actions/.github/actions/opentofu/plan@vx.x.x
         with:
           artifact-name: 'opentofu-aws-backend'
           init-args: '-var-file="variables/platform.tfvars"'

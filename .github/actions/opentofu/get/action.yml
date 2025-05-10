@@ -1,14 +1,15 @@
-name: OpenTofu Apply
-description: Apply changes to infrastructure
+name: OpenTofu Get
+description: Install OpenTofu modules
 author: Cupel
 
 inputs:
-  apply-args:
-    description: Additional arguments for init command.
-    required: false
   version:
     description: The version of OpenTofu to install.
     default: 1.8.1
+    required: true
+  working-directory:
+    description: Directory that contains the OpenTofu code.
+    default: ./infrastructure
     required: true
 
 runs:
@@ -18,10 +19,11 @@ runs:
       uses: opentofu/setup-opentofu@v1
       with:
         tofu_version: '${{ inputs.version }}'
-    - name: Apply
+    - name: Get
       shell: bash
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        exec tofu apply -no-color -auto-approve -lock=true ${{ inputs.apply-args }} 'plan.tfplan'
+        exec tofu get -no-color
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

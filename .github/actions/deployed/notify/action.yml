@@ -1,0 +1,26 @@
+name: Notify Deployment
+description: Send a notification when a deployment has finished
+author: Cupel
+
+inputs:
+  environment:
+    description: The name of the environment the changes were deployed to
+    required: true
+  google-chat-webhook-url:
+    description: The Webhook URL for the chat to send the message to
+    required: true
+  subtitle:
+    description: The subtitle of the message
+    required: true
+    
+runs:
+  using: composite
+  steps:
+    - name: Notify
+      if: ${{ always() }}
+      uses: SimonScholz/google-chat-action@main
+      with:
+        webhookUrl: '${{ inputs.google-chat-webhook-url }}'
+        title: 'Deployed ${{ github.ref_name }} to ${{ inputs.environment }}'
+        subtitle: '${{ inputs.subtitle }}'
+        jobStatus: '${{ job.status }}'

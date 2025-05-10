@@ -1,0 +1,33 @@
+name: Tag
+description: Create a tag
+author: Cupel
+
+inputs:
+  gpg-key:
+    description: The GPG key
+    required: true
+  gpg-password:
+    description: The password for the GPG key
+    required: true
+  tag:
+    description: Tag value
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: '${{ inputs.gpg-key }}'
+        passphrase: '${{ inputs.gpg-password }}'
+        git_user_signingkey: true
+        git_tag_gpgsign: true
+    - name: Create tag
+      shell: bash
+      run: |
+        exec git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
+    - name: Push tag
+      shell: bash
+      run: |
+        exec git push origin tag '${{ inputs.tag }}'

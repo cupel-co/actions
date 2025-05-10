@@ -1,5 +1,6 @@
 name: Generate Semantic Version
 description: Generate Semantic Version
+author: Cupel
 
 outputs:
   major:
@@ -31,7 +32,7 @@ outputs:
     value: ${{ steps.generate.outputs.buildMetaData }}
   full-build-meta-data:
     description: 'The full build metadata value'
-    value: ${{ steps.generate.outputs.full-buildMetaData }}
+    value: ${{ steps.generate.outputs.fullBuildMetaData }}
   major-minor-patch:
     description: 'The major minor patch value'
     value: ${{ steps.generate.outputs.majorMinorPatch }}
@@ -77,21 +78,18 @@ outputs:
 
 inputs:
   flow-type:
-    description: 'The flow type to use'
+    description: The flow type to use (GITHUB_FLOW) 
     required: true
     default: GITHUB_FLOW
-    type: choice
-    options:
-      - GITHUB_FLOW
 
 runs:
   using: composite
   steps:
     - name: Create GitVersion config file for GITHUB_FLOW
-      shell: pwsh
+      shell: bash
       if: ${{ inputs.flow-type == 'GITHUB_FLOW' }}
       run: |
-        @'
+        cat << 'EOF' > "${{ runner.temp }}/GitVersion.yml"
         assembly-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-file-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-informational-format: '{Major}.{Minor}.{Patch}'
@@ -133,15 +131,15 @@ runs:
         pre-release-weight: 60000
         prevent-increment:
           when-current-commit-tagged: true
-        '@ | Out-File -FilePath '${{ runner.temp }}/GitVersion.yml' -Encoding utf8
+        EOF
 
     - name: Install
-      uses: gittools/actions/gitversion/setup@v1.1.1
+      uses: gittools/actions/gitversion/setup@v3.1.1
       with:
         versionSpec: '6.0.x'
     - name: Generate
       id: generate
-      uses: gittools/actions/gitversion/execute@v1.1.1
+      uses: gittools/actions/gitversion/execute@v3.1.1
       with:
         targetPath: './'
         disableCache: true

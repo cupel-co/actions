@@ -19,9 +19,10 @@ runs:
       shell: bash
       run: |
         shopt -s nocasematch
+        branch="${{ github.head_ref }}"
         if [[ "$branch" =~ GH-([0-9]+) ]]; then
           number="${BASH_REMATCH[1]}"
-            echo "Issue Number: $number"
+          echo "Issue Number: $number"
           echo "number=$number" >> "$GITHUB_OUTPUT"
         
           title=$(gh issue view "$number" --repo "${{ github.repository }}" --json title --jq '.title')

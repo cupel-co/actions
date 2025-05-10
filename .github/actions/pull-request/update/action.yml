@@ -35,30 +35,29 @@ runs:
       id: replace-values
       shell: pwsh
       run: |
-        $repository="${{ github.repository }}"
-        $branch="${{ github.head_ref }}"
-        $environment="${{ inputs.environment }}"
+        repository="${{ github.repository }}"
+        branch="${{ github.head_ref }}"
+        environment="${{ inputs.environment }}"
         
-        $issueNumber="${{ steps.get-issue-details.outputs.number }}"
-        $issueTitle="${{ steps.get-issue-details.outputs.title }}"
+        issueNumber="${{ steps.get-issue-details.outputs.number }}"
+        issueTitle="${{ steps.get-issue-details.outputs.title }}"
         
-        $prNumber="${{ github.event.pull_request.number }}"
-        $prTitle="${{ github.event.pull_request.title }}"
-        $prDescription = @'
-        ${{ github.event.pull_request.body }}
-        '@
+        prNumber="${{ github.event.pull_request.number }}"
+        prTitle="${{ github.event.pull_request.title }}"
+        prDescription="${{ github.event.pull_request.body }}"
         
-        $description = $prDescription -replace "{{REPOSITORY}}", $repository `
-          -replace "{{BRANCH_NAME}}", $branch `
-          -replace "{{ENVIRONMENT}}", $environment `
-          -replace "{{ISSUE_NUMBER}}", $issueNumber `
-          -replace "{{ISSUE_TITLE}}", $issueTitle `
-          -replace "{{PULL_REQUEST_NUMBER}}", $prNumber `
-          -replace "{{PULL_REQUEST_TITLE}}", $prTitle
-        
-        "description<<EOF" >> $env:GITHUB_OUTPUT
-        "$description" >> $env:GITHUB_OUTPUT
-        "EOF" >> $env:GITHUB_OUTPUT
+        description="${prDescription//'{{REPOSITORY}}'/$repository}"
+        description="${description//'{{BRANCH_NAME}}'/$branch}"
+        description="${description//'{{ENVIRONMENT}}'/$environment}"
+        description="${description//'{{ISSUE_NUMBER}}'/$issueNumber}"
+        description="${description//'{{ISSUE_TITLE}}'/$issueTitle}"
+        description="${description//'{{PULL_REQUEST_NUMBER}}'/$prNumber}"
+        description="${description//'{{PULL_REQUEST_TITLE}}'/$prTitle}"
+        {
+          echo "description<<EOF"
+          echo "$description"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
 
     - name: Update Pull Request Description
       uses: vblagoje/update-pr@v1

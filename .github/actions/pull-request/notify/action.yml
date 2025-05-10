@@ -5,7 +5,6 @@ inputs:
   google-chat-webhook-url:
     description: The Webhook URL for the chat to send the message to
     required: true
-    type: string
 
 runs:
   using: composite

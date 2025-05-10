@@ -16,7 +16,7 @@ runs:
   steps:
     - name: Get issue details
       id: get-issue-details
-      shell: pwsh
+      shell: bash
       run: |
         $branch="${{ github.head_ref }}"
         if ($branch -match "GH-(\d+)-") {
@@ -35,7 +35,7 @@ runs:
         GH_TOKEN: ${{ github.token }}
     - name: Replace values
       id: replace-values
-      shell: pwsh
+      shell: bash
       run: |
         repository="${{ github.repository }}"
         branch="${{ github.head_ref }}"
@@ -47,7 +47,7 @@ runs:
         prNumber="${{ github.event.pull_request.number }}"
         prTitle="${{ github.event.pull_request.title }}"
         prDescription="${{ github.event.pull_request.body }}"
-        
+
         description="${prDescription//'{{REPOSITORY}}'/$repository}"
         description="${description//'{{BRANCH_NAME}}'/$branch}"
         description="${description//'{{ENVIRONMENT}}'/$environment}"

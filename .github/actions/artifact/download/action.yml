@@ -1,15 +1,14 @@
-name: Download Tar Artifact
+name: Download Artifact
 description: Download and extract a tar artifact that was previously uploaded in the workflow by the upload-artifact action
+author: Cupel
 
 inputs:
   name:
     description: Artifact name
     required: true
-    type: string
   path:
     description: Destination path
     required: true
-    type: string
 
 runs:
   using: composite
@@ -22,9 +21,9 @@ runs:
     - run: |
         tar -xvf artifact.tar
       working-directory: '${{ inputs.path }}'
-      shell: pwsh
+      shell: bash
 
     - run: |
         rm artifact.tar
       working-directory: '${{ inputs.path }}'
-      shell: pwsh
+      shell: bash

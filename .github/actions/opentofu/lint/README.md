@@ -1,4 +1,4 @@
-# TF Lint
+# OpenTofu Lint
 Action: [tflint](./action.yml)
 
 The Lint TF files GitHub Action installs TFLint, initializes its configuration, and runs a linting process on OpenTofu files in the specified directory.
@@ -31,5 +31,5 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Infrastructure
-        uses: cupel-co/actions/.github/actions/tflint@vx.x.x
+        uses: cupel-co/actions/.github/actions/opentofu/lint@vx.x.x
 ```

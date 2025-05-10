@@ -1,0 +1,31 @@
+name: AWS ECR Login
+description: Login to AWS ECR
+author: Cupel
+
+inputs:
+  github-role-to-assume:
+    description: The role to assume for GitHub
+    required: true
+  integration-role-to-assume:
+    description: The role to assume for integration
+    required: true
+  region:
+    description: The AWS region
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: aws-actions/configure-aws-credentials@v4
+      name: Configure GitHub credentials
+      with:
+        role-to-assume: '${{ inputs.github-role-to-assume }}'
+        aws-region: '${{ inputs.region }}'
+    - uses: aws-actions/configure-aws-credentials@v4
+      name: Configure integration credentials
+      with:
+        role-to-assume: ${{ inputs.integration-role-to-assume }}
+        role-chaining: true
+        aws-region: '${{ inputs.region }}'
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2

@@ -1,5 +1,6 @@
 name: Notify Release
 description: Send a notification when a release has been created
+author: Cupel
 
 inputs:
   google-chat-webhook-url:

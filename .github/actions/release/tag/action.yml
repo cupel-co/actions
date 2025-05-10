@@ -1,5 +1,7 @@
 name: Tag
 description: Create a tag
+author: Cupel
+
 inputs:
   gpg-key:
     description: The GPG key

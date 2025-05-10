@@ -1,5 +1,6 @@
 name: Generate Semantic Version
 description: Generate Semantic Version
+author: Cupel
 
 outputs:
   major:

@@ -1,5 +1,7 @@
 name: Release
 description: Create a release from a GitHub tag
+author: Cupel
+
 inputs:
   files:
     description: Files to include in GitHub Release

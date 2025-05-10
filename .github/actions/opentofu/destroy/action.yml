@@ -1,38 +1,29 @@
 name: OpenTofu Destroy
 description: Destroy the infrastructure described in the state file
 author: Cupel
-branding:
-  icon: box
-  color: orange
 
 inputs:
   destroy-args:
     description: Additional arguments for destroy command.
     required: false
-    type: string
   init-args:
     description: Additional arguments for init command.
     required: false
-    type: string
   use-primary-backend:
     description: A flag to indicate if the primary backend should be used.
     default: 'true'
     required: true
-    type: string
   version:
     description: The version of OpenTofu to install.
     default: 1.8.1
     required: true
-    type: string
   working-directory:
     description: Directory that contains the OpenTofu code.
     default: ./infrastructure
     required: true
-    type: string
   workspace:
     description: The workspace name. If the workspace doesn't exist it will be created.
     required: true
-    type: string
 
 runs:
   using: composite
@@ -42,35 +33,35 @@ runs:
       with:
         tofu_version: '${{ inputs.version }}'
     - name: Init
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
+        exec tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Select workspace
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu workspace select -or-create=true '${{ inputs.workspace }}'
+        exec tofu workspace select -or-create=true '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Delete infrastructure
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu destroy -auto-approve -no-color -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.destroy-args }}
+        exec tofu destroy -auto-approve -no-color -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.destroy-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Delete workspace
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu workspace select default
-        tofu workspace delete '${{ inputs.workspace }}'
+        exec tofu workspace select default
+        exec tofu workspace delete '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

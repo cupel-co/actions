@@ -1,51 +1,43 @@
-name: Comment
+name: OpenTofu Cost Comment
 description: Add a comment to the PR in GitHub
+author: Cupel
+
 inputs:
   api-key:
     description: Infracost API Key
     required: true
-    type: string
   behaviour:
-    description: The behaviour for the comment
+    description: The behaviour for the comment (delete-and-new,hide-and-new, new, update)
     default: update
     required: false
-    type: choice
-    options:
-      - delete-and-new
-      - hide-and-new
-      - new
-      - update
   comment-identifier:
     description: A unique identifier to for the comment added by this implementation
     default: comment
     required: false
-    type: string
   currency:
     description: The currency to show estimates in
     default: AUD
     required: false
-    type: string
   path:
     description: The path to the JSON report file
     required: true
-    type: string
   pull-request-number:
     description: The PR number
     required: true
-    type: number
   repository:
     description: The repository name
     required: true
-    type: string
   token:
     description: The GitHub token
     required: true
-    type: string
   version:
     description: The version of Infracost to install
     default: 0.10.x
     required: false
-    type: string
+  working-directory:
+    description: Directory that contains the OpenTofu code.
+    default: ./infrastructure
+    required: true
 
 runs:
   using: composite
@@ -57,13 +49,14 @@ runs:
         currency: ${{ inputs.currency }}
         version: ${{ inputs.version }}
     - name: Comment
-      shell: pwsh
+      shell: bash
+      working-directory: '${{ inputs.working-directory }}'
       run: |
-        infracost comment github `
-          --path=${{ inputs.path }} `
-          --repo=${{ inputs.repository }} `
-          --pull-request=${{ inputs.pull-request-number }} `
-          --github-token=${{ inputs.token }} `
-          --behavior=${{ inputs.behaviour }} `
-          --show-all-projects `
+        exec infracost comment github \
+          --path=${{ inputs.path }} \
+          --repo=${{ inputs.repository }} \
+          --pull-request=${{ inputs.pull-request-number }} \
+          --github-token=${{ inputs.token }} \
+          --behavior=${{ inputs.behaviour }} \
+          --show-all-projects \
           --tag=infracost-${{ inputs.comment-identifier }}

@@ -1,11 +1,11 @@
-name: Delete artifact
+name: Delete Artifact
 description: Delete an uploaded artifact
+author: Cupel
 
 inputs:
   name:
     description: Artifact name
     required: true
-    type: string
 
 runs:
   using: composite

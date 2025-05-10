@@ -1,38 +1,34 @@
 name: OpenTofu Plan
 description: Generate a plan
 author: Cupel
-branding: 
-  icon: box
-  color: orange
 
 inputs:
   init-args:
-    description: Additional arguments for init command. 
+    description: Additional arguments for init command.
     required: false
-    type: string
   plan-args:
     description: Additional arguments for plan command.
     required: false
-    type: string
   use-primary-backend:
     description: A flag to indicate if the primary backend should be used.
-    default: true
+    default: 'true'
     required: true
-    type: string
   version:
     description: The version of OpenTofu to install.
     default: 1.8.1
     required: true
-    type: string
   working-directory:
     description: Directory that contains the OpenTofu code.
     default: ./infrastructure
     required: true
-    type: string
   workspace:
     description: The workspace name. If the workspace doesn't exist it will be created.
     required: true
-    type: string
+
+outputs:
+  CHANGES:
+    description: 'Indicates if the plan detected changes (true) or not (false). Value is empty string if plan failed.'
+    value: ${{ steps.plan.outputs.CHANGES }}
 
 runs:
   using: composite
@@ -42,26 +38,35 @@ runs:
       with:
         tofu_version: '${{ inputs.version }}'
     - name: Init
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
+        exec tofu init -no-color -lockfile=readonly -lock=false -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.init-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Select workspace
-      shell: pwsh
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu workspace select -or-create=true '${{ inputs.workspace }}'
+        exec tofu workspace select -or-create=true '${{ inputs.workspace }}'
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0
     - name: Plan
-      shell: pwsh
+      id: plan
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        tofu plan -no-color -out='plan.tfplan' -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.plan-args }}
+        exec tofu plan -no-color -out='plan.tfplan' -detailed-exitcode -var 'use_primary_backend=${{ inputs.use-primary-backend }}' ${{ inputs.plan-args }}
+        exit_code=$?
+        if [ $exit_code -eq 0 ]; then
+         echo "CHANGES=false" >> "$GITHUB_OUTPUT"
+        elif [ $exit_code -eq 2 ]; then
+         echo "CHANGES=true" >> "$GITHUB_OUTPUT"
+        else
+         exit $exit_code
+        fi
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

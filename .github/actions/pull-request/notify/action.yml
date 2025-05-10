@@ -1,5 +1,6 @@
-name: Notify PR
+﻿name: Notify PR
 description: Send a notification when a PR has been raised
+author: Cupel
 
 inputs:
   google-chat-webhook-url:

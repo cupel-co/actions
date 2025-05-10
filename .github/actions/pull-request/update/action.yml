@@ -1,5 +1,7 @@
 ﻿name: Update PR Description
 description: Update PR Description
+author: Cupel
+
 inputs:
   environment:
     description: The environment name

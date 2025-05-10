@@ -4,15 +4,16 @@ inputs:
   files:
     description: Files to include in GitHub Release
     required: false
-    type: string
   tag:
     description: Tag value
     required: true
-    type: string
   token:
     description: Token for GitHub interactions
     required: true
-    type: string
+outputs:
+  changes:
+    description: The changes for the release
+    value: '${{ steps.changelog.outputs.changes }}'
 
 runs:
   using: composite
@@ -23,8 +24,9 @@ runs:
       with:
         excludeTypes: ''
         includeInvalidCommits: true
-        token: '${{ github.token }}'
+        token: '${{ inputs.token }}'
         tag: '${{ inputs.tag }}'
+        useGitmojis: false
         writeToFile: false
     - name: Release
       uses: softprops/action-gh-release@v2

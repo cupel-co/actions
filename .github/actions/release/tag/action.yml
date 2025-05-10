@@ -1,18 +1,15 @@
-name: Create Tag
+name: Tag
 description: Create a tag
 inputs:
   gpg-key:
     description: The GPG key
     required: true
-    type: string
   gpg-password:
     description: The password for the GPG key
     required: true
-    type: string
   tag:
     description: Tag value
     required: true
-    type: string
 
 runs:
   using: composite
@@ -25,10 +22,10 @@ runs:
         git_user_signingkey: true
         git_tag_gpgsign: true
     - name: Create tag
-      shell: pwsh
+      shell: bash
       run: |
-        git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
+        exec git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
     - name: Push tag
-      shell: pwsh
+      shell: bash
       run: |
-        git push origin tag '${{ inputs.tag }}'
+        exec git push origin tag '${{ inputs.tag }}'

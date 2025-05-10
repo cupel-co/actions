@@ -1,5 +1,5 @@
-# Create Tag
-Action: [tag](./action.yml)
+# Tag
+Action: [tag](action.yml)
 
 Create a tag
 

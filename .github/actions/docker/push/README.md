@@ -1,5 +1,5 @@
 # Docker Push
-Action: [apply](./action.yml)
+Action: [push](./action.yml)
 
 This action pushes a docker image to a registry.
 

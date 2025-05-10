@@ -1,5 +1,5 @@
 # Docker Build
-Action: [apply](./action.yml)
+Action: [build](./action.yml)
 
 The Docker Build GitHub Action builds a Docker image using the provided Dockerfile and tags it with the specified tag.
 

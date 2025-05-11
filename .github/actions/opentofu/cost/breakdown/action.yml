@@ -65,8 +65,8 @@ runs:
         EOF
         )
         
-        if [[ -n "${{ inputs.template }}" ]]; then
-          template_content="${{ inputs.template }}"
+        if [[ "${{ inputs.template }}" =~ [^[:space:]] ]]; then
+          template_content="template_content"
         fi
 
         exec infracost generate config --out-file infracost.yml --template "$template_content"

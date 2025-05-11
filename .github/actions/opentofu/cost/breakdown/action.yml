@@ -49,12 +49,7 @@ runs:
       shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: |
-        template_content=""
-        
-        if [[ -n "${{ inputs.template }}" ]]; then
-          template_content="${{ inputs.template }}"
-        else
-          read -r -d '' template_content << 'EOF'
+        template_content=$(cat << 'EOF'
         version: 0.1
         projects:
         {{- range $project := matchPaths "variables/:env.tfvars" }}
@@ -68,6 +63,10 @@ runs:
                 - "{{ relPath "./" $project._path }}"
         {{- end }}
         EOF
+        )
+        
+        if [[ -n "${{ inputs.template }}" ]]; then
+          template_content="${{ inputs.template }}"
         fi
 
         exec infracost generate config --out-file infracost.yml --template "$template_content"

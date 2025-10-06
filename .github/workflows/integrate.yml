@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/release/tag
         with:
           ssh-private-key: '${{ secrets.GH_SIGNING_SSH_PRIVATE_KEY }}'
-          ssh-private-key-password: '${{ secrets.GH_SIGNING_SSH_PRIVATE_KEY_PASSWORD }}'
+          ssh-public-key: '${{ secrets.GH_SIGNING_SSH_PUBLIC_KEY }}'
           tag: '${{ env.tag }}'
 
       - name: Release

@@ -3,11 +3,11 @@ description: Create a tag
 author: Cupel
 
 inputs:
-  gpg-key:
-    description: The GPG key
+  ssh-private-key:
+    description: The private SSH key
     required: true
-  gpg-password:
-    description: The password for the GPG key
+  ssh-private-key-password:
+    description: The password for the private SSH key
     required: true
   tag:
     description: Tag value
@@ -16,18 +16,29 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Import GPG key
-      uses: crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: '${{ inputs.gpg-key }}'
-        passphrase: '${{ inputs.gpg-password }}'
-        git_user_signingkey: true
-        git_tag_gpgsign: true
+    - name: Set up SSH
+      shell: bash
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ inputs.ssh-private-key }}" > ~/.ssh/signing_key
+        chmod 600 ~/.ssh/signing_key
+        eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/signing_key <<< "${{ inputs.ssh-private-key-password }}"
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - name: Configure Git for SSH signing
+      shell: bash
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git config gpg.format ssh
+        git config user.signingkey ~/.ssh/signing_key
+        git config commit.gpgsign true
+        git config tag.gpgsign true
     - name: Create tag
       shell: bash
       run: |
-        exec git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
+        git tag -s '${{ inputs.tag }}' -m '${{ inputs.tag }}'
     - name: Push tag
       shell: bash
       run: |
-        exec git push origin tag '${{ inputs.tag }}'
+        git push origin tag '${{ inputs.tag }}'

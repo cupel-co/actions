@@ -12,6 +12,12 @@ inputs:
   tag:
     description: Tag value
     required: true
+  user-email:
+    description: The email of the user the SSH key is registered to
+    required: true
+  user-name:
+    description: The name of the user the SSH key is registered to
+    required: true
 
 runs:
   using: composite
@@ -24,27 +30,27 @@ runs:
         echo "${{ inputs.ssh-public-key }}" > ~/.ssh/signing.pub
         chmod 644 ~/.ssh/signing.pub
         
-        echo "${{ inputs.ssh-private-key }}" | tr -d '\r' > ~/.ssh/signing
+        echo "${{ inputs.ssh-private-key }}" > ~/.ssh/signing
         chmod 600 ~/.ssh/signing
         
-        echo "github-actions[bot]@users.noreply.github.com $(cat ~/.ssh/signing.pub)" > ~/.ssh/allowed_signers
+        echo "${{ inputs.user-email }} $(cat ~/.ssh/signing.pub)" > ~/.ssh/allowed_signers
         
         eval $(ssh-agent -s)
         ssh-add ~/.ssh/signing
     - name: Configure Git for SSH signing
       shell: bash
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config user.name "${{ inputs.user-name }}"
+        git config --global user.email "${{ inputs.user-email }}"
 
-        git config --global gpg.format ssh
-        git config --global user.signingkey ~/.ssh/signing
+        git config gpg.format ssh
+        git config user.signingkey ~/.ssh/signing
         
-        git config --global gpg.ssh.program ssh-keygen
-        git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+        git config gpg.ssh.program ssh-keygen
+        git config gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
         
-        git config --global commit.gpgsign true
-        git config --global tag.gpgsign true
+        git config commit.gpgsign true
+        git config tag.gpgsign true
     - name: Create tag
       shell: bash
       run: |

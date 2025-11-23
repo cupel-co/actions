@@ -4,11 +4,13 @@ Action: [tag](action.yml)
 Create a tag
 
 ## Inputs
-| Name              | Description         | Required | Default |
-|-------------------|---------------------|----------|---------|
-| `ssh-private-key` | The private SSH key | true     |         |
-| `ssh-public-key`  | The public SSH key  | true     |         |
-| `tag`             | Tag value           | true     |         |
+| Name              | Description                                            | Required | Default |
+|-------------------|--------------------------------------------------------|----------|---------|
+| `ssh-private-key` | The private SSH key                                    | true     |         |
+| `ssh-public-key`  | The public SSH key                                     | true     |         |
+| `tag`             | Tag value                                              | true     |         |
+| `user-email `     | Email of the user the SSH signing key is registered to | true     |         |
+| `user-name`       | Name of the user the SSH signing key is registered to  | true     |         |
 
 ## Example
 ```yaml
@@ -25,4 +27,6 @@ jobs:
           ssh-private-key: "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-public-key: "${{ secrets.SSH_PUBLIC_KEY }}"
           tag: v1.0.0
+          user-email: "${{ secrets.GH_SIGNING_SSH_USER_EMAIL }}"
+          user-name: "${{ secrets.GH_SIGNING_SSH_USER_EMAIL }}"
 ```

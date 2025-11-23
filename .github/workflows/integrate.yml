@@ -50,6 +50,8 @@ jobs:
           ssh-private-key: '${{ secrets.GH_SIGNING_SSH_PRIVATE_KEY }}'
           ssh-public-key: '${{ secrets.GH_SIGNING_SSH_PUBLIC_KEY }}'
           tag: '${{ env.tag }}'
+          user-email: '${{ secrets.GH_SIGNING_SSH_USER_EMAIL }}'
+          user-name: '${{ secrets.GH_SIGNING_SSH_USER_NAME }}'
 
       - name: Release
         uses: ./.github/actions/release/create

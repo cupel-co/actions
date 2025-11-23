@@ -32,8 +32,8 @@ runs:
     - name: Configure Git for SSH signing
       shell: bash
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.signingkey ~/.ssh/signing.pub
         git config --global gpg.format ssh
         git config --global gpg.ssh.program "ssh-keygen"

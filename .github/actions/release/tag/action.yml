@@ -19,31 +19,37 @@ runs:
     - name: Install SSH signing key
       shell: bash
       run: |
-        eval $(ssh-agent -s)
-        echo "${{ inputs.ssh-private-key }}" | tr -d '\r' | ssh-add -
+        git --version
         mkdir -p ~/.ssh
         echo "${{ inputs.ssh-public-key }}" > ~/.ssh/signing.pub
-        chmod 600 ~/.ssh/signing.pub
+        chmod 644 ~/.ssh/signing.pub
+        
         echo "${{ inputs.ssh-private-key }}" | tr -d '\r' > ~/.ssh/signing
         chmod 600 ~/.ssh/signing
-        eval "$(ssh-agent -s)"
+        
+        echo "github-actions[bot]@users.noreply.github.com $(cat ~/.ssh/signing.pub)" > ~/.ssh/allowed_signers
+        
+        eval $(ssh-agent -s)
         ssh-add ~/.ssh/signing
-        ssh-add -l
     - name: Configure Git for SSH signing
       shell: bash
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.signingkey ~/.ssh/signing.pub
+
         git config --global gpg.format ssh
-        git config --global gpg.ssh.program "ssh-keygen"
+        git config --global user.signingkey ~/.ssh/signing
+        
+        git config --global gpg.ssh.program ssh-keygen
         git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+        
         git config --global commit.gpgsign true
         git config --global tag.gpgsign true
     - name: Create tag
       shell: bash
       run: |
         git tag -s "${{ inputs.tag }}" -m "${{ inputs.tag }}"
+        git tag -v "${{ inputs.tag }}"
     - name: Push tag
       shell: bash
       run: |

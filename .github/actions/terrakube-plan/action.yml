@@ -42,6 +42,14 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Install Terrakube CLI
+      shell: bash
+      run: |
+        TERRAKUBE_CLI_VERSION="v1.0.0-beta.3"
+        curl -sL "https://github.com/terrakube-io/terrakube-cli/releases/download/${TERRAKUBE_CLI_VERSION}/terrakube-${TERRAKUBE_CLI_VERSION}-linux-amd64.tar.gz" \
+          | sudo tar xz -C /usr/local/bin terrakube
+        terrakube version
+
     - name: Ensure jq is available
       shell: bash
       run: |
@@ -50,26 +58,28 @@ runs:
           sudo apt-get update -qq && sudo apt-get install -y -qq jq
         fi
 
+    - name: Login to Terrakube
+      shell: bash
+      run: |
+        terrakube login \
+          --api-url "${{ inputs.terrakube_endpoint }}" \
+          --pat "${{ inputs.terrakube_token }}"
+
     - name: Resolve workspace ID
       id: resolve-workspace
       shell: bash
       run: |
-        response=$(curl -s -w "\n%{http_code}" -G \
-          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
-          -H "Content-Type: application/vnd.api+json" \
-          --data-urlencode "filter[workspace]=name==${{ inputs.terrakube_workspace_name }}" \
-          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/workspace")
+        response=$(terrakube workspace list \
+          -o "${{ inputs.terrakube_organization_id }}" \
+          --filter "name==${{ inputs.terrakube_workspace_name }}" \
+          --output json)
 
-        http_code=$(echo "$response" | tail -1)
-        body=$(echo "$response" | sed '$d')
+        workspace_id=$(echo "$response" | jq -r '
+          if .data then .data[0].id
+          elif type == "array" then .[0].id
+          else .id
+          end // empty')
 
-        if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
-          echo "::error::Failed to query workspaces (HTTP $http_code)"
-          echo "$body"
-          exit 1
-        fi
-
-        workspace_id=$(echo "$body" | jq -r '.data[0].id // empty')
         if [[ -z "$workspace_id" ]]; then
           echo "::error::Workspace '${{ inputs.terrakube_workspace_name }}' not found in organisation ${{ inputs.terrakube_organization_id }}"
           exit 1
@@ -78,66 +88,30 @@ runs:
         echo "workspace_id=$workspace_id" >> "$GITHUB_OUTPUT"
         echo "Resolved workspace '${{ inputs.terrakube_workspace_name }}' to ID: $workspace_id"
 
-    - name: Resolve organisation name
-      id: resolve-org
-      shell: bash
-      run: |
-        response=$(curl -s \
-          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
-          -H "Content-Type: application/vnd.api+json" \
-          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}")
-
-        org_name=$(echo "$response" | jq -r '.data.attributes.name // empty')
-        if [[ -z "$org_name" ]]; then
-          echo "::warning::Could not resolve organisation name, using ID"
-          org_name="${{ inputs.terrakube_organization_id }}"
-        fi
-
-        echo "org_name=$org_name" >> "$GITHUB_OUTPUT"
-
     - name: Create job
       id: create-job
       shell: bash
       run: |
-        payload=$(jq -n \
-          --arg template "${{ inputs.terrakube_template }}" \
-          --arg branch "${{ inputs.branch }}" \
-          --arg workspace_id "${{ steps.resolve-workspace.outputs.workspace_id }}" \
-          '{
-            data: {
-              type: "job",
-              attributes: {
-                templateReference: $template,
-                overrideBranch: $branch
-              },
-              relationships: {
-                workspace: {
-                  data: { type: "workspace", id: $workspace_id }
-                }
-              }
-            }
-          }')
+        response=$(terrakube job create \
+          -o "${{ inputs.terrakube_organization_id }}" \
+          -w "${{ steps.resolve-workspace.outputs.workspace_id }}" \
+          -c "${{ inputs.terrakube_template }}" \
+          --output json)
 
-        response=$(curl -s -w "\n%{http_code}" \
-          -X POST \
-          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
-          -H "Content-Type: application/vnd.api+json" \
-          -d "$payload" \
-          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/job")
+        job_id=$(echo "$response" | jq -r '
+          if .data then .data.id
+          elif type == "array" then .[0].id
+          else .id
+          end // empty')
 
-        http_code=$(echo "$response" | tail -1)
-        body=$(echo "$response" | sed '$d')
-
-        if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
-          echo "::error::Failed to create job (HTTP $http_code)"
-          echo "$body"
+        if [[ -z "$job_id" ]]; then
+          echo "::error::Failed to create job"
+          echo "$response"
           exit 1
         fi
 
-        job_id=$(echo "$body" | jq -r '.data.id')
-        org_name="${{ steps.resolve-org.outputs.org_name }}"
         workspace_name="${{ inputs.terrakube_workspace_name }}"
-        job_url="${{ inputs.terrakube_endpoint }}/app/${org_name}/${workspace_name}/${job_id}"
+        job_url="${{ inputs.terrakube_endpoint }}/app/${{ inputs.terrakube_organization_id }}/${workspace_name}/${job_id}"
 
         echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
         echo "job_url=$job_url" >> "$GITHUB_OUTPUT"
@@ -149,9 +123,7 @@ runs:
       shell: bash
       run: |
         job_id="${{ steps.create-job.outputs.job_id }}"
-        endpoint="${{ inputs.terrakube_endpoint }}"
         org_id="${{ inputs.terrakube_organization_id }}"
-        token="${{ inputs.terrakube_token }}"
         show_output="${{ inputs.show_output }}"
         timeout=3600
         interval=10
@@ -165,20 +137,36 @@ runs:
             exit 1
           fi
 
-          response=$(curl -s \
-            -H "Authorization: Bearer $token" \
-            -H "Content-Type: application/vnd.api+json" \
-            "${endpoint}/api/v1/organization/${org_id}/job/${job_id}")
+          response=$(terrakube job list \
+            -o "$org_id" \
+            --filter "id==${job_id}" \
+            --output json)
 
-          status=$(echo "$response" | jq -r '.data.attributes.status // "unknown"')
+          status=$(echo "$response" | jq -r '
+            if .data then .data[0].attributes.status
+            elif type == "array" then .[0].status // .[0].attributes.status
+            else .status // .attributes.status
+            end // "unknown"')
 
           if [[ "$show_output" == "true" ]]; then
-            current_output=$(echo "$response" | jq -r '.data.attributes.output // empty')
-            if [[ -n "$current_output" ]]; then
-              current_len=${#current_output}
-              if [[ $current_len -gt $last_output_len ]]; then
-                printf '%s' "${current_output:$last_output_len}"
-                last_output_len=$current_len
+            step_response=$(terrakube step list \
+              -o "$org_id" \
+              -j "${job_id}" \
+              --output json 2>/dev/null || true)
+
+            if [[ -n "$step_response" ]]; then
+              current_output=$(echo "$step_response" | jq -r '
+                if .data then [.data[].attributes.output // empty] | join("\n")
+                elif type == "array" then [.[].output // empty] | join("\n")
+                else .output // empty
+                end' 2>/dev/null || true)
+
+              if [[ -n "$current_output" ]]; then
+                current_len=${#current_output}
+                if [[ $current_len -gt $last_output_len ]]; then
+                  printf '%s' "${current_output:$last_output_len}"
+                  last_output_len=$current_len
+                fi
               fi
             fi
           fi

@@ -227,10 +227,12 @@ runs:
 
         echo "Cancelling Terrakube job $job_id..."
 
+        payload=$(jq -n --arg id "$job_id" '{data:{type:"job",id:$id,attributes:{status:"cancelled"}}}')
+
         response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH \
           -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
           -H "Content-Type: application/vnd.api+json" \
-          -d '{"data":{"type":"job","attributes":{"status":"cancelled"}}}' \
+          -d "$payload" \
           "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/job/$job_id")
 
         if [[ "$response" =~ ^2 ]]; then

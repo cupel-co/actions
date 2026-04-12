@@ -96,9 +96,18 @@ runs:
         payload=$(jq -n \
           --arg org "${{ inputs.terrakube_organization_id }}" \
           --arg ws "${{ steps.resolve-workspace.outputs.workspace_id }}" \
+          --arg branch "${{ inputs.branch }}" \
+          --arg template "${{ inputs.terrakube_template }}" \
+          --arg commit "${{ github.sha }}" \
           '{
             data: {
               type: "job",
+              attributes: {
+                templateReference: $template,
+                overrideBranch: $branch,
+                commitId: $commit,
+                comments: "Triggered by GitHub Actions"
+              },
               relationships: {
                 workspace: {
                   data: {

@@ -42,13 +42,6 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Install Terrakube CLI
-      shell: bash
-      run: |
-        TERRAKUBE_CLI_VERSION="v1.0.0-beta.3"
-        curl -sL "https://github.com/terrakube-io/terrakube-cli/releases/download/${TERRAKUBE_CLI_VERSION}/terrakube-${TERRAKUBE_CLI_VERSION}-linux-amd64.tar.gz" \
-          | sudo tar xz -C /usr/local/bin terrakube
-
     - name: Ensure jq is available
       shell: bash
       run: |
@@ -57,21 +50,12 @@ runs:
           sudo apt-get update -qq && sudo apt-get install -y -qq jq
         fi
 
-    - name: Login to Terrakube
-      shell: bash
-      run: |
-        terrakube login \
-          --api-url "${{ inputs.terrakube_endpoint }}" \
-          --pat "${{ inputs.terrakube_token }}"
-
     - name: Resolve workspace ID
       id: resolve-workspace
       shell: bash
       run: |
-        response=$(terrakube workspace list \
-          -o "${{ inputs.terrakube_organization_id }}" \
-          --filter "name==${{ inputs.terrakube_workspace_name }}" \
-          --output json)
+        response=$(curl -s -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/workspace?filter=name%3D%3D${{ inputs.terrakube_workspace_name }}")
 
         workspace_id=$(echo "$response" | jq -r '
           if type == "object" and has("data") then .data[0].id // .data[0].ID
@@ -92,18 +76,33 @@ runs:
       id: create-job
       shell: bash
       run: |
-        response=$(terrakube job create \
-          -o "${{ inputs.terrakube_organization_id }}" \
-          -w "${{ steps.resolve-workspace.outputs.workspace_id }}" \
-          -c "${{ inputs.terrakube_template }}" \
-          --output json)
+        payload=$(jq -n \
+          --arg org "${{ inputs.terrakube_organization_id }}" \
+          --arg ws "${{ steps.resolve-workspace.outputs.workspace_id }}" \
+          '{
+            data: {
+              type: "job",
+              attributes: {
+                isDestroy: false
+              },
+              relationships: {
+                workspace: {
+                  data: {
+                    id: $ws,
+                    type: "workspace"
+                  }
+                }
+              }
+            }
+          }')
 
-        job_id=$(echo "$response" | jq -r '
-          if type == "object" and has("data") then .data.id // .data.ID // .data[0].id // .data[0].ID
-          elif type == "array" then .[0].id // .[0].ID
-          elif type == "object" then .id // .ID
-          else empty
-          end // empty')
+        response=$(curl -s -X POST \
+          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          -d "$payload" \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/job")
+
+        job_id=$(echo "$response" | jq -r '.data.id // .data[0].id // .id // empty')
 
         if [[ -z "$job_id" ]]; then
           echo "::error::Failed to create job"
@@ -138,29 +137,19 @@ runs:
             exit 1
           fi
 
-          response=$(terrakube job list \
-            -o "$org_id" \
-            --filter "id==${job_id}" \
-            --output json)
+          response=$(curl -s -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+            "${{ inputs.terrakube_endpoint }}/api/v1/organization/$org_id/job/$job_id")
 
-          status=$(echo "$response" | jq -r '
-            if type == "object" and has("data") then .data[0].attributes.status // .data[0].attributes.Status
-            elif type == "array" then .[0].status // .[0].Status // .[0].attributes.status // .[0].attributes.Status
-            elif type == "object" then .status // .Status // .attributes.status // .attributes.Status
-            else "unknown"
-            end // "unknown"')
+          status=$(echo "$response" | jq -r '.data.attributes.status // .data.status // .status // "unknown"')
 
           if [[ "$show_output" == "true" ]]; then
-            step_response=$(terrakube step list \
-              -o "$org_id" \
-              -j "${job_id}" \
-              --output json 2>/dev/null || true)
+            step_response=$(curl -s -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+              "${{ inputs.terrakube_endpoint }}/api/v1/organization/$org_id/job/$job_id/step" 2>/dev/null || echo '{}')
 
-            if [[ -n "$step_response" ]]; then
+            if [[ -n "$step_response" && "$step_response" != "{}" ]]; then
               current_output=$(echo "$step_response" | jq -r '
-                if type == "object" and has("data") then [.data[].attributes.output // .data[].attributes.Output // empty] | join("\n")
-                elif type == "array" then map(.output // .Output // .attributes.output // .attributes.Output // empty) | join("\n")
-                elif type == "object" then .output // .Output // .attributes.output // .attributes.Output // empty
+                if type == "object" and has("data") then [.data[].attributes.output // empty] | join("\n")
+                elif type == "array" then map(.attributes.output // .output // empty) | join("\n")
                 else empty
                 end' 2>/dev/null || true)
 
@@ -190,7 +179,7 @@ runs:
               echo "job_status=cancelled" >> "$GITHUB_OUTPUT"
               exit 1
               ;;
-            pending|queue|running)
+            pending|queued|running)
               echo "Job $job_id status: $status (${elapsed}s elapsed)"
               ;;
             *)

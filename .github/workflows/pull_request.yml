@@ -1,0 +1,53 @@
+name: Terrakube Plan
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace:
+          - production-cupel-au
+          - production-cupel-co
+          - production-cupel-com-au
+          - production-flippantlamb-com
+          - production-gavanlamb-com
+          - staging-cupel-au
+          - staging-cupel-co
+          - staging-cupel-com-au
+          - staging-flippantlamb-com
+          - staging-gavanlamb-com
+          - preview-cupel-au
+          - preview-cupel-co
+          - preview-cupel-com-au
+          - preview-flippantlamb-com
+          - preview-gavanlamb-com
+          - test-cupel-au
+          - test-cupel-co
+          - test-cupel-com-au
+          - test-flippantlamb-com
+          - test-gavanlamb-com
+          - cicd-cupel-au
+          - cicd-cupel-co
+          - cicd-cupel-com-au
+          - cicd-flippantlamb-com
+          - cicd-gavanlamb-com
+    name: "Plan \u2014 ${{ matrix.workspace }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Terrakube Plan
+        uses: ./.github/actions/terrakube-plan
+        with:
+          terrakube_token: ${{ secrets.TERRAKUBE_PAT }}
+          terrakube_endpoint: ${{ secrets.TERRAKUBE_ENDPOINT }}
+          terrakube_organization_id: ${{ secrets.TERRAKUBE_ORG_ID }}
+          terrakube_workspace_name: ${{ matrix.workspace }}
+          branch: ${{ github.head_ref }}

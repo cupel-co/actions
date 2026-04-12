@@ -1,0 +1,212 @@
+name: Terrakube Plan
+description: Trigger a Terrakube plan job for a workspace and poll for completion
+author: Cupel
+
+inputs:
+  terrakube_token:
+    description: Terrakube Personal Access Token or Team API Token.
+    required: true
+  terrakube_endpoint:
+    description: Base URL of the Terrakube API (e.g. https://terrakube-api.example.com).
+    required: true
+  terrakube_organization_id:
+    description: UUID of the Terrakube organisation.
+    required: true
+  terrakube_workspace_name:
+    description: Name of the Terrakube workspace to plan.
+    required: true
+  terrakube_template:
+    description: Name of the plan template to use.
+    default: Plan
+    required: false
+  branch:
+    description: Branch to run the plan against.
+    default: ${{ github.head_ref }}
+    required: false
+  show_output:
+    description: Whether to stream job output to the GitHub Actions log.
+    default: 'true'
+    required: false
+
+outputs:
+  job_id:
+    description: The Terrakube job UUID.
+    value: ${{ steps.create-job.outputs.job_id }}
+  job_status:
+    description: Final job status (completed, failed, cancelled).
+    value: ${{ steps.poll.outputs.job_status }}
+  job_url:
+    description: URL to the Terrakube job in the UI.
+    value: ${{ steps.create-job.outputs.job_url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure jq is available
+      shell: bash
+      run: |
+        if ! command -v jq &>/dev/null; then
+          echo "jq not found, installing..."
+          sudo apt-get update -qq && sudo apt-get install -y -qq jq
+        fi
+
+    - name: Resolve workspace ID
+      id: resolve-workspace
+      shell: bash
+      run: |
+        response=$(curl -s -w "\n%{http_code}" -G \
+          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          --data-urlencode "filter[workspace]=name==${{ inputs.terrakube_workspace_name }}" \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/workspace")
+
+        http_code=$(echo "$response" | tail -1)
+        body=$(echo "$response" | sed '$d')
+
+        if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
+          echo "::error::Failed to query workspaces (HTTP $http_code)"
+          echo "$body"
+          exit 1
+        fi
+
+        workspace_id=$(echo "$body" | jq -r '.data[0].id // empty')
+        if [[ -z "$workspace_id" ]]; then
+          echo "::error::Workspace '${{ inputs.terrakube_workspace_name }}' not found in organisation ${{ inputs.terrakube_organization_id }}"
+          exit 1
+        fi
+
+        echo "workspace_id=$workspace_id" >> "$GITHUB_OUTPUT"
+        echo "Resolved workspace '${{ inputs.terrakube_workspace_name }}' to ID: $workspace_id"
+
+    - name: Resolve organisation name
+      id: resolve-org
+      shell: bash
+      run: |
+        response=$(curl -s \
+          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}")
+
+        org_name=$(echo "$response" | jq -r '.data.attributes.name // empty')
+        if [[ -z "$org_name" ]]; then
+          echo "::warning::Could not resolve organisation name, using ID"
+          org_name="${{ inputs.terrakube_organization_id }}"
+        fi
+
+        echo "org_name=$org_name" >> "$GITHUB_OUTPUT"
+
+    - name: Create job
+      id: create-job
+      shell: bash
+      run: |
+        payload=$(jq -n \
+          --arg template "${{ inputs.terrakube_template }}" \
+          --arg branch "${{ inputs.branch }}" \
+          --arg workspace_id "${{ steps.resolve-workspace.outputs.workspace_id }}" \
+          '{
+            data: {
+              type: "job",
+              attributes: {
+                templateReference: $template,
+                overrideBranch: $branch
+              },
+              relationships: {
+                workspace: {
+                  data: { type: "workspace", id: $workspace_id }
+                }
+              }
+            }
+          }')
+
+        response=$(curl -s -w "\n%{http_code}" \
+          -X POST \
+          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          -d "$payload" \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/job")
+
+        http_code=$(echo "$response" | tail -1)
+        body=$(echo "$response" | sed '$d')
+
+        if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
+          echo "::error::Failed to create job (HTTP $http_code)"
+          echo "$body"
+          exit 1
+        fi
+
+        job_id=$(echo "$body" | jq -r '.data.id')
+        org_name="${{ steps.resolve-org.outputs.org_name }}"
+        workspace_name="${{ inputs.terrakube_workspace_name }}"
+        job_url="${{ inputs.terrakube_endpoint }}/app/${org_name}/${workspace_name}/${job_id}"
+
+        echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
+        echo "job_url=$job_url" >> "$GITHUB_OUTPUT"
+        echo "Created job $job_id"
+        echo "Job URL: $job_url"
+
+    - name: Poll for completion
+      id: poll
+      shell: bash
+      run: |
+        job_id="${{ steps.create-job.outputs.job_id }}"
+        endpoint="${{ inputs.terrakube_endpoint }}"
+        org_id="${{ inputs.terrakube_organization_id }}"
+        token="${{ inputs.terrakube_token }}"
+        show_output="${{ inputs.show_output }}"
+        timeout=3600
+        interval=10
+        elapsed=0
+        last_output_len=0
+
+        while true; do
+          if [[ $elapsed -ge $timeout ]]; then
+            echo "::error::Job $job_id timed out after 60 minutes"
+            echo "job_status=timeout" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          response=$(curl -s \
+            -H "Authorization: Bearer $token" \
+            -H "Content-Type: application/vnd.api+json" \
+            "${endpoint}/api/v1/organization/${org_id}/job/${job_id}")
+
+          status=$(echo "$response" | jq -r '.data.attributes.status // "unknown"')
+
+          if [[ "$show_output" == "true" ]]; then
+            current_output=$(echo "$response" | jq -r '.data.attributes.output // empty')
+            if [[ -n "$current_output" ]]; then
+              current_len=${#current_output}
+              if [[ $current_len -gt $last_output_len ]]; then
+                printf '%s' "${current_output:$last_output_len}"
+                last_output_len=$current_len
+              fi
+            fi
+          fi
+
+          case "$status" in
+            completed)
+              echo "Job $job_id completed successfully"
+              echo "job_status=completed" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+            failed)
+              echo "::error::Job $job_id failed"
+              echo "job_status=failed" >> "$GITHUB_OUTPUT"
+              exit 1
+              ;;
+            cancelled)
+              echo "::error::Job $job_id was cancelled"
+              echo "job_status=cancelled" >> "$GITHUB_OUTPUT"
+              exit 1
+              ;;
+            pending|queue|running)
+              echo "Job $job_id status: $status (${elapsed}s elapsed)"
+              ;;
+            *)
+              echo "::warning::Unknown job status: $status"
+              ;;
+          esac
+
+          sleep $interval
+          elapsed=$((elapsed + interval))
+        done

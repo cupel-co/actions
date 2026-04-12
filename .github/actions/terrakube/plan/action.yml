@@ -74,9 +74,9 @@ runs:
           --output json)
 
         workspace_id=$(echo "$response" | jq -r '
-          if type == "object" and has("data") then .data[0].id
-          elif type == "array" then .[0].id
-          elif type == "object" then .id
+          if type == "object" and has("data") then .data[0].id // .data[0].ID
+          elif type == "array" then .[0].id // .[0].ID
+          elif type == "object" then .id // .ID
           else empty
           end // empty')
 
@@ -99,9 +99,9 @@ runs:
           --output json)
 
         job_id=$(echo "$response" | jq -r '
-          if type == "object" and has("data") then .data.id // .data[0].id
-          elif type == "array" then .[0].id
-          elif type == "object" then .id
+          if type == "object" and has("data") then .data.id // .data.ID // .data[0].id // .data[0].ID
+          elif type == "array" then .[0].id // .[0].ID
+          elif type == "object" then .id // .ID
           else empty
           end // empty')
 
@@ -144,9 +144,9 @@ runs:
             --output json)
 
           status=$(echo "$response" | jq -r '
-            if type == "object" and has("data") then .data[0].attributes.status
-            elif type == "array" then .[0].status // .[0].attributes.status
-            elif type == "object" then .status // .attributes.status
+            if type == "object" and has("data") then .data[0].attributes.status // .data[0].attributes.Status
+            elif type == "array" then .[0].status // .[0].Status // .[0].attributes.status // .[0].attributes.Status
+            elif type == "object" then .status // .Status // .attributes.status // .attributes.Status
             else "unknown"
             end // "unknown"')
 
@@ -158,9 +158,9 @@ runs:
 
             if [[ -n "$step_response" ]]; then
               current_output=$(echo "$step_response" | jq -r '
-                if type == "object" and has("data") then [.data[].attributes.output // empty] | join("\n")
-                elif type == "array" then map(.output // .attributes.output // empty) | join("\n")
-                elif type == "object" then .output // .attributes.output // empty
+                if type == "object" and has("data") then [.data[].attributes.output // .data[].attributes.Output // empty] | join("\n")
+                elif type == "array" then map(.output // .Output // .attributes.output // .attributes.Output // empty) | join("\n")
+                elif type == "object" then .output // .Output // .attributes.output // .attributes.Output // empty
                 else empty
                 end' 2>/dev/null || true)
 

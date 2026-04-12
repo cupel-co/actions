@@ -74,9 +74,10 @@ runs:
           --output json)
 
         workspace_id=$(echo "$response" | jq -r '
-          if .data then .data[0].id
+          if type == "object" and has("data") then .data[0].id
           elif type == "array" then .[0].id
-          else .id
+          elif type == "object" then .id
+          else empty
           end // empty')
 
         if [[ -z "$workspace_id" ]]; then
@@ -98,9 +99,10 @@ runs:
           --output json)
 
         job_id=$(echo "$response" | jq -r '
-          if .data then .data.id
+          if type == "object" and has("data") then .data.id // .data[0].id
           elif type == "array" then .[0].id
-          else .id
+          elif type == "object" then .id
+          else empty
           end // empty')
 
         if [[ -z "$job_id" ]]; then
@@ -142,9 +144,10 @@ runs:
             --output json)
 
           status=$(echo "$response" | jq -r '
-            if .data then .data[0].attributes.status
+            if type == "object" and has("data") then .data[0].attributes.status
             elif type == "array" then .[0].status // .[0].attributes.status
-            else .status // .attributes.status
+            elif type == "object" then .status // .attributes.status
+            else "unknown"
             end // "unknown"')
 
           if [[ "$show_output" == "true" ]]; then
@@ -155,9 +158,10 @@ runs:
 
             if [[ -n "$step_response" ]]; then
               current_output=$(echo "$step_response" | jq -r '
-                if .data then [.data[].attributes.output // empty] | join("\n")
-                elif type == "array" then [.[].output // empty] | join("\n")
-                else .output // empty
+                if type == "object" and has("data") then [.data[].attributes.output // empty] | join("\n")
+                elif type == "array" then map(.output // .attributes.output // empty) | join("\n")
+                elif type == "object" then .output // .attributes.output // empty
+                else empty
                 end' 2>/dev/null || true)
 
               if [[ -n "$current_output" ]]; then

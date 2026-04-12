@@ -213,3 +213,28 @@ runs:
           sleep $interval
           elapsed=$((elapsed + interval))
         done
+
+    - name: Cancel job
+      if: cancelled()
+      shell: bash
+      run: |
+        job_id="${{ steps.create-job.outputs.job_id }}"
+
+        if [[ -z "$job_id" ]]; then
+          echo "No job ID found, nothing to cancel"
+          exit 0
+        fi
+
+        echo "Cancelling Terrakube job $job_id..."
+
+        response=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH \
+          -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          -H "Content-Type: application/vnd.api+json" \
+          -d '{"data":{"type":"job","attributes":{"status":"cancelled"}}}' \
+          "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/job/$job_id")
+
+        if [[ "$response" =~ ^2 ]]; then
+          echo "Job $job_id cancelled successfully (HTTP $response)"
+        else
+          echo "::warning::Failed to cancel job $job_id (HTTP $response)"
+        fi

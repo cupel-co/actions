@@ -48,7 +48,6 @@ runs:
         TERRAKUBE_CLI_VERSION="v1.0.0-beta.3"
         curl -sL "https://github.com/terrakube-io/terrakube-cli/releases/download/${TERRAKUBE_CLI_VERSION}/terrakube-${TERRAKUBE_CLI_VERSION}-linux-amd64.tar.gz" \
           | sudo tar xz -C /usr/local/bin terrakube
-        terrakube version
 
     - name: Ensure jq is available
       shell: bash

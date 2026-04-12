@@ -99,9 +99,6 @@ runs:
           '{
             data: {
               type: "job",
-              attributes: {
-                isDestroy: false
-              },
               relationships: {
                 workspace: {
                   data: {

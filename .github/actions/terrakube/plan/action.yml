@@ -56,6 +56,8 @@ runs:
       run: |
         response=$(curl -s -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
           "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/workspace?filter=name%3D%3D${{ inputs.terrakube_workspace_name }}")
+        
+        echo $response
 
         workspace_id=$(echo "$response" | jq -r '
           if type == "object" and has("data") then .data[0].id // .data[0].ID

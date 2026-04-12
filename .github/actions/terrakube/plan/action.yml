@@ -125,14 +125,14 @@ runs:
         job_id="${{ steps.create-job.outputs.job_id }}"
         org_id="${{ inputs.terrakube_organization_id }}"
         show_output="${{ inputs.show_output }}"
-        timeout=3600
+        timeout=600
         interval=10
         elapsed=0
         last_output_len=0
 
         while true; do
           if [[ $elapsed -ge $timeout ]]; then
-            echo "::error::Job $job_id timed out after 60 minutes"
+            echo "::error::Job $job_id timed out after 10 minutes"
             echo "job_status=timeout" >> "$GITHUB_OUTPUT"
             exit 1
           fi

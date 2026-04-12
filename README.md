@@ -42,5 +42,8 @@ A collection of reusable GitHub actions
 * [notify](.github/actions/release/notify/README.md)
 * [tag](.github/actions/release/tag/README.md)
 
+### Terrakube
+* [plan](.github/actions/terrakube/plan/README.md)
+
 ### Version
 * [generate](.github/actions/version/generate/README.md)

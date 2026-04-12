@@ -54,8 +54,9 @@ runs:
       id: resolve-workspace
       shell: bash
       run: |
-        response=$(curl -s --get -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
-          --data-urlencode "name=${{ inputs.terrakube_workspace_name }}" \
+        ws_name="${{ inputs.terrakube_workspace_name }}"
+        response=$(curl -s -H "Authorization: Bearer ${{ inputs.terrakube_token }}" \
+          --get --data-urlencode "filter[workspace]=name==$ws_name" \
           "${{ inputs.terrakube_endpoint }}/api/v1/organization/${{ inputs.terrakube_organization_id }}/workspace")
 
         echo "$response"

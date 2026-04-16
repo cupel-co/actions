@@ -43,6 +43,8 @@ A collection of reusable GitHub actions
 * [tag](.github/actions/release/tag/README.md)
 
 ### Terrakube
+* [apply](.github/actions/terrakube/apply/README.md)
+* [destroy](.github/actions/terrakube/destroy/README.md)
 * [plan](.github/actions/terrakube/plan/README.md)
 
 ### Version

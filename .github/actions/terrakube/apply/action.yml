@@ -20,7 +20,7 @@ inputs:
   terrakube-hostname:
     description: The hostname of your Terrakube instance (e.g., terrakube.example.com).
     required: true
-    default: https://terrakube-api.cicd.cupel.co
+    default: terrakube-api.cicd.cupel.co
   terrakube-token:
     description: The API token for authenticating with Terrakube.
     required: true

@@ -4,14 +4,14 @@ Action: [plan](./action.yml)
 Runs an OpenTofu plan using Terrakube as the cloud backend. This action installs OpenTofu, configures Terrakube credentials, initializes the infrastructure, and generates a plan.
 
 ## Inputs
-| Name                 | Description                                                              | Required | Default Value                          |
-|----------------------|--------------------------------------------------------------------------|----------|----------------------------------------|
-| `init-args`          | Additional arguments for the `init` command.                             | false    |                                        |
-| `plan-args`          | Additional arguments for the `plan` command.                             | false    |                                        |
-| `version`            | The version of OpenTofu to install.                                      | true     | `1.11.6`                               |
-| `working-directory`  | Directory containing the OpenTofu code.                                  | true     | `./infrastructure`                     |
-| `terrakube-hostname` | The hostname of your Terrakube instance.                                 | true     | `https://terrakube-api.cicd.cupel.co`  |
-| `terrakube-token`    | The API token for authenticating with Terrakube.                         | true     |                                        |
+| Name                 | Description                                                              | Required | Default Value                  |
+|----------------------|--------------------------------------------------------------------------|----------|--------------------------------|
+| `init-args`          | Additional arguments for the `init` command.                             | false    |                                |
+| `plan-args`          | Additional arguments for the `plan` command.                             | false    |                                |
+| `version`            | The version of OpenTofu to install.                                      | true     | `1.11.6`                       |
+| `working-directory`  | Directory containing the OpenTofu code.                                  | true     | `./infrastructure`             |
+| `terrakube-hostname` | The hostname of your Terrakube instance.                                 | true     | `terrakube-api.cicd.cupel.co`  |
+| `terrakube-token`    | The API token for authenticating with Terrakube.                         | true     |                                |
 
 ## Requirements
 

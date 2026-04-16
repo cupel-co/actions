@@ -1,13 +1,13 @@
-# Terrakube CLI Plan
-Action: [plan](./action.yml)
+# Terrakube CLI Destroy
+Action: [destroy](./action.yml)
 
-Runs an OpenTofu plan using Terrakube as the cloud backend. This action installs OpenTofu, configures Terrakube credentials, initializes the infrastructure, and generates a plan.
+Destroys OpenTofu-managed infrastructure using Terrakube as the cloud backend. This action installs OpenTofu, configures Terrakube credentials, initializes the infrastructure, and runs destroy.
 
 ## Inputs
 | Name                 | Description                                                              | Required | Default Value                          |
 |----------------------|--------------------------------------------------------------------------|----------|----------------------------------------|
 | `init-args`          | Additional arguments for the `init` command.                             | false    |                                        |
-| `plan-args`          | Additional arguments for the `plan` command.                             | false    |                                        |
+| `destroy-args`       | Additional arguments for the `destroy` command.                          | false    |                                        |
 | `version`            | The version of OpenTofu to install.                                      | true     | `1.11.6`                               |
 | `working-directory`  | Directory containing the OpenTofu code.                                  | true     | `./infrastructure`                     |
 | `terrakube-hostname` | The hostname of your Terrakube instance.                                 | true     | `https://terrakube-api.cicd.cupel.co`  |
@@ -39,12 +39,13 @@ The action automatically sets `TF_VAR_terrakube_hostname` so the cloud block can
 ## Example
 ```yaml
 jobs:
-  plan:
-    name: Plan Infrastructure
+  destroy:
+    name: Destroy Infrastructure
     runs-on: ubuntu-latest
+    environment: Production
     concurrency:
       cancel-in-progress: false
-      group: terrakube-plan
+      group: terrakube-destroy
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,17 +53,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Plan
-        uses: cupel-co/actions/.github/actions/terrakube/plan@vx.x.x
+      - name: Destroy
+        uses: cupel-co/actions/.github/actions/terrakube/destroy@vx.x.x
         with:
           init-args: '-var-file="variables/platform.tfvars"'
-          plan-args: '-var-file="variables/platform.tfvars"'
+          destroy-args: '-var-file="variables/platform.tfvars"'
           terrakube-token: ${{ secrets.TERRAKUBE_TOKEN }}
 ```
 
 ## Notes
 
-- **Cost estimation and linting**: Configure these in your Terrakube workspace template. When the CLI triggers a plan, Terrakube executes the full template workflow server-side.
+- **Approval workflow**: Terrakube controls the approval flow based on your workspace settings. Destroy operations may require manual approval in the Terrakube UI.
 - **Authentication**: The action uses `setup-opentofu`'s built-in credential handling via `cli_config_credentials_hostname` and `cli_config_credentials_token`.
-
+- **Use with caution**: This action destroys infrastructure. Ensure you have appropriate environment protection rules configured in GitHub.
 

@@ -1,13 +1,13 @@
-# Terrakube CLI Plan
-Action: [plan](./action.yml)
+# Terrakube CLI Apply
+Action: [apply](./action.yml)
 
-Runs an OpenTofu plan using Terrakube as the cloud backend. This action installs OpenTofu, configures Terrakube credentials, initializes the infrastructure, and generates a plan.
+Applies OpenTofu changes using Terrakube as the cloud backend. This action installs OpenTofu, configures Terrakube credentials, initializes the infrastructure, and runs apply.
 
 ## Inputs
 | Name                 | Description                                                              | Required | Default Value                          |
 |----------------------|--------------------------------------------------------------------------|----------|----------------------------------------|
 | `init-args`          | Additional arguments for the `init` command.                             | false    |                                        |
-| `plan-args`          | Additional arguments for the `plan` command.                             | false    |                                        |
+| `apply-args`         | Additional arguments for the `apply` command.                            | false    |                                        |
 | `version`            | The version of OpenTofu to install.                                      | true     | `1.11.6`                               |
 | `working-directory`  | Directory containing the OpenTofu code.                                  | true     | `./infrastructure`                     |
 | `terrakube-hostname` | The hostname of your Terrakube instance.                                 | true     | `https://terrakube-api.cicd.cupel.co`  |
@@ -39,12 +39,13 @@ The action automatically sets `TF_VAR_terrakube_hostname` so the cloud block can
 ## Example
 ```yaml
 jobs:
-  plan:
-    name: Plan Infrastructure
+  apply:
+    name: Apply Infrastructure
     runs-on: ubuntu-latest
+    environment: Production
     concurrency:
       cancel-in-progress: false
-      group: terrakube-plan
+      group: terrakube-apply
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,17 +53,16 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Plan
-        uses: cupel-co/actions/.github/actions/terrakube/plan@vx.x.x
+      - name: Apply
+        uses: cupel-co/actions/.github/actions/terrakube/apply@vx.x.x
         with:
           init-args: '-var-file="variables/platform.tfvars"'
-          plan-args: '-var-file="variables/platform.tfvars"'
+          apply-args: '-var-file="variables/platform.tfvars"'
           terrakube-token: ${{ secrets.TERRAKUBE_TOKEN }}
 ```
 
 ## Notes
 
-- **Cost estimation and linting**: Configure these in your Terrakube workspace template. When the CLI triggers a plan, Terrakube executes the full template workflow server-side.
+- **Approval workflow**: The action does not use `-auto-approve`. Terrakube controls the approval flow based on your workspace settings (auto-apply or manual approval via Terrakube UI).
 - **Authentication**: The action uses `setup-opentofu`'s built-in credential handling via `cli_config_credentials_hostname` and `cli_config_credentials_token`.
-
-
+- **Cost estimation and security scanning**: Configure these in your Terrakube workspace template. They run server-side as part of the Terrakube workflow.

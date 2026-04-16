@@ -1,13 +1,13 @@
-name: Terrakube CLI Plan
-description: Generate a plan using Terrakube as the cloud backend
+name: Terrakube CLI Apply
+description: Apply changes to infrastructure using Terrakube as the cloud backend
 author: Cupel
 
 inputs:
   init-args:
     description: Additional arguments for init command.
     required: false
-  plan-args:
-    description: Additional arguments for plan command.
+  apply-args:
+    description: Additional arguments for apply command.
     required: false
   version:
     description: The version of OpenTofu to install.
@@ -44,11 +44,10 @@ runs:
         TF_INPUT: 0
         TF_VAR_terrakube_hostname: '${{ inputs.terrakube-hostname }}'
 
-    - name: Plan
-      id: plan
+    - name: Apply
       shell: bash
       working-directory: '${{ inputs.working-directory }}'
-      run: tofu plan -no-color ${{ inputs.plan-args }}
+      run: tofu apply -no-color ${{ inputs.apply-args }}
       env:
         TF_IN_AUTOMATION: 1
         TF_INPUT: 0

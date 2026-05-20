@@ -21,18 +21,6 @@ A collection of reusable GitHub actions
 * [build](.github/actions/docker/build/README.md)
 * [push](.github/actions/docker/push/README.md)
 
-### OpenTofu
-* [apply](.github/actions/opentofu/apply/README.md)
-* [cost](.github/actions/opentofu/cost)
-  * [breakdown](.github/actions/opentofu/cost/breakdown/README.md)
-  * [comment](.github/actions/opentofu/cost/comment/README.md)
-  * [diff](.github/actions/opentofu/cost/diff/README.md)
-* [destroy](.github/actions/opentofu/destroy/README.md)
-* [get](.github/actions/opentofu/get/README.md)
-* [lint](.github/actions/opentofu/lint/README.md)
-* [plan](.github/actions/opentofu/plan/README.md)
-* [sec](.github/actions/opentofu/sec/README.md)
-
 ### Pull Request
 * [notify](.github/actions/pull-request/notify/README.md)
 * [update](.github/actions/pull-request/update/README.md)
@@ -41,11 +29,6 @@ A collection of reusable GitHub actions
 * [create](.github/actions/release/create/README.md)
 * [notify](.github/actions/release/notify/README.md)
 * [tag](.github/actions/release/tag/README.md)
-
-### Terrakube
-* [apply](.github/actions/terrakube/apply/README.md)
-* [destroy](.github/actions/terrakube/destroy/README.md)
-* [plan](.github/actions/terrakube/plan/README.md)
 
 ### Version
 * [generate](.github/actions/version/generate/README.md)

@@ -31,7 +31,18 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e
         with:
-          config-file: deeligence/platform-github-codeql/config/github-actions/config.yml@main
+          config: |
+            name: "GitHub Actions config"
+            disable-default-queries: false
+            languages:
+              - 'actions'
+            queries:
+              - name: Security and Quality
+                uses: security-and-quality
+            packs:
+              - codeql/actions-queries
+            max-disk-cache: 500
+
           external-repository-token: ${{ secrets.CODEQL_CONFIG_TOKEN }}
 
       - name: Perform CodeQL Analysis

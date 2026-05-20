@@ -14,9 +14,6 @@ A collection of reusable GitHub actions
 * [ecr](.github/actions/aws/ecr)
   * [login](.github/actions/aws/ecr/login/README.md)
 
-### Deployed
-* [notify](.github/actions/deployed/notify/README.md)
-
 ### Docker
 * [build](.github/actions/docker/build/README.md)
 * [push](.github/actions/docker/push/README.md)

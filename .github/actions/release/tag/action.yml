@@ -1,62 +1,35 @@
 name: Tag
-description: Create a signed tag using SSH signing keys
-author: Cupel
-
+description: Create a tag
 inputs:
-  ssh-private-key:
-    description: The private SSH signing key
+  gpg-key:
+    description: The GPG key
     required: true
-  ssh-public-key:
-    description: The public SSH signing key
+  gpg-password:
+    description: The password for the GPG key
     required: true
   tag:
     description: Tag value
-    required: true
-  user-email:
-    description: The email of the user the SSH key is registered to
-    required: true
-  user-name:
-    description: The name of the user the SSH key is registered to
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Install SSH signing key
-      shell: bash
-      run: |
-        git --version
-        mkdir -p ~/.ssh
-        echo "${{ inputs.ssh-public-key }}" > ~/.ssh/signing.pub
-        chmod 644 ~/.ssh/signing.pub
-        
-        echo "${{ inputs.ssh-private-key }}" > ~/.ssh/signing
-        chmod 600 ~/.ssh/signing
-        
-        echo "${{ inputs.user-email }} $(cat ~/.ssh/signing.pub)" > ~/.ssh/allowed_signers
-        
-        eval $(ssh-agent -s)
-        ssh-add ~/.ssh/signing
-    - name: Configure Git for SSH signing
-      shell: bash
-      run: |
-        git config user.name "${{ inputs.user-name }}"
-        git config --global user.email "${{ inputs.user-email }}"
-
-        git config gpg.format ssh
-        git config user.signingkey ~/.ssh/signing
-        
-        git config gpg.ssh.program ssh-keygen
-        git config gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
-        
-        git config commit.gpgsign true
-        git config tag.gpgsign true
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec
+      with:
+        gpg_private_key: '${{ inputs.gpg-key }}'
+        passphrase: '${{ inputs.gpg-password }}'
+        git_user_signingkey: true
+        git_tag_gpgsign: true
     - name: Create tag
       shell: bash
+      env:
+        TAG: ${{ inputs.tag }}
       run: |
-        git tag -s "${{ inputs.tag }}" -m "${{ inputs.tag }}"
-        git tag -v "${{ inputs.tag }}"
+        git tag -s "$TAG" -m "$TAG"
     - name: Push tag
       shell: bash
+      env:
+        TAG: ${{ inputs.tag }}
       run: |
-        git push origin tag "${{ inputs.tag }}"
+        git push origin tag "$TAG"

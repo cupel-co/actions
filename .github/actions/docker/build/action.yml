@@ -1,6 +1,9 @@
 name: Docker Build Target
 description: Build dockerfile target
 author: Cupel
+branding:
+  icon: square
+  color: blue
 
 inputs:
   arguments:
@@ -34,5 +37,11 @@ runs:
     - name: Build ${{ inputs.target }}
       shell: bash
       working-directory: '${{ inputs.working-directory }}'
+      env:
+        DOCKERFILE: ${{ inputs.dockerfile }}
+        TARGET: ${{ inputs.target }}
+        IMAGE_NAME: ${{ inputs.name }}
+        IMAGE_TAG: ${{ inputs.tag }}
+        BUILD_ARGS: ${{ inputs.arguments }}
       run: |
-        exec docker build -f ${{ inputs.dockerfile }} --target ${{ inputs.target }} -t ${{ inputs.name }}:${{ inputs.tag }}  ${{ inputs.arguments }} .
+        docker build -f "$DOCKERFILE" --target "$TARGET" -t "$IMAGE_NAME:$IMAGE_TAG" $BUILD_ARGS .

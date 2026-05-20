@@ -20,7 +20,7 @@ jobs:
       contents: write
     steps:
       - name: Create
-        uses: cupel-co/actions/.github/actions/github/tag@vX.X.X
+        uses: cupel-co/actions/.github/actions/release/tag@vX.X.X
         with:
           gpg-key: "${{ secrets.GH_GPG_KEY }}"
           gpg-password: "${{ secrets.GH_GPG_KEY_PASSWORD }}"

@@ -88,8 +88,10 @@ runs:
     - name: Create GitVersion config file for GITHUB_FLOW
       shell: bash
       if: ${{ inputs.flow-type == 'GITHUB_FLOW' }}
+      env:
+        RUNNER_TEMP_DIR: ${{ runner.temp }}
       run: |
-        cat << 'EOF' > "${{ runner.temp }}/GitVersion.yml"
+        cat << 'EOF' > "$RUNNER_TEMP_DIR/GitVersion.yml"
         assembly-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-file-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-informational-format: '{Major}.{Minor}.{Patch}'
@@ -134,16 +136,16 @@ runs:
         EOF
 
     - name: Install
-      uses: gittools/actions/gitversion/setup@v3.1.1
+      uses: gittools/actions/gitversion/setup@51d325634925d7d9ce0a7efc2c586c0bc2b9eee6
       with:
         versionSpec: '6.0.x'
     - name: Generate
       id: generate
-      uses: gittools/actions/gitversion/execute@v3.1.1
+      uses: gittools/actions/gitversion/execute@51d325634925d7d9ce0a7efc2c586c0bc2b9eee6
       with:
         targetPath: './'
         disableCache: true
         useConfigFile: true
         configFilePath: '${{ runner.temp }}/GitVersion.yml'
       env:
-        BUILD_NUMBER: '${{ github.run_number }}'
+        BUILD_NUMBER: '${{ github.run_id }}-${{ github.run_attempt }}'

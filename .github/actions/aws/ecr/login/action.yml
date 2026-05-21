@@ -1,6 +1,9 @@
 name: AWS ECR Login
 description: Login to AWS ECR
 author: Cupel
+branding:
+  icon: log-in
+  color: orange
 
 inputs:
   github-role-to-assume:
@@ -16,16 +19,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: aws-actions/configure-aws-credentials@v4
+    - uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
       name: Configure GitHub credentials
       with:
         role-to-assume: '${{ inputs.github-role-to-assume }}'
         aws-region: '${{ inputs.region }}'
-    - uses: aws-actions/configure-aws-credentials@v4
+    - uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7
       name: Configure integration credentials
       with:
         role-to-assume: ${{ inputs.integration-role-to-assume }}
         role-chaining: true
         aws-region: '${{ inputs.region }}'
     - name: Login to Amazon ECR
-      uses: aws-actions/amazon-ecr-login@v2
+      uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076

@@ -12,7 +12,7 @@ Delete the specified artifact.
 ```yaml
 jobs:
   delete-artifact:
-    name: Delete Artifact 
+    name: Delete Artifact
     runs-on: ubuntu-latest
     steps:
       - name: Delete

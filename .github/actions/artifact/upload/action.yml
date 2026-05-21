@@ -27,9 +27,11 @@ runs:
   steps:
     - run: |
         shopt -s globstar
-        tar -cvf artifact.tar -C "${{ inputs.path }}" .
+        tar -cvf artifact.tar -C "$INPUT_PATH" .
       shell: bash
-    - uses: actions/upload-artifact@v4
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+    - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: '${{ inputs.name }}'
         path: artifact.tar

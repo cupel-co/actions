@@ -17,7 +17,7 @@ jobs:
       sem-ver: ${{ steps.generate.outputs.sem-ver }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -38,7 +38,7 @@ jobs:
       tag: v${{ needs.generate.outputs.sem-ver }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -47,11 +47,9 @@ jobs:
       - name: Tag
         uses: ./.github/actions/release/tag
         with:
-          ssh-private-key: '${{ secrets.GH_SIGNING_SSH_PRIVATE_KEY }}'
-          ssh-public-key: '${{ secrets.GH_SIGNING_SSH_PUBLIC_KEY }}'
+          gpg-key: '${{ secrets.GH_GPG_PRIVATE_KEY }}'
+          gpg-password: '${{ secrets.GH_GPG_PRIVATE_KEY_PASSWORD }}'
           tag: '${{ env.tag }}'
-          user-email: '${{ secrets.GH_SIGNING_SSH_USER_EMAIL }}'
-          user-name: '${{ secrets.GH_SIGNING_SSH_USER_NAME }}'
 
       - name: Release
         uses: ./.github/actions/release/create

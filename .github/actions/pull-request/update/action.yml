@@ -63,7 +63,7 @@ runs:
         } >> "$GITHUB_OUTPUT"
 
     - name: Update Pull Request Description
-      uses: vblagoje/update-pr@v1
+      uses: vblagoje/update-pr@07f32e5cf48e494d208b00668f95810935ce4df1
       with:
         pr-number: ${{ github.event.pull_request.number }}
         pr-body: '${{ steps.replace-values.outputs.description }}'

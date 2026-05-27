@@ -22,7 +22,7 @@ runs:
   steps:
     - name: Generate changelog
       id: changelog
-      uses: requarks/changelog-action@v1
+      uses: requarks/changelog-action@b78a3354a01f4a1affb484b9264b506a815c46b1
       with:
         excludeTypes: ''
         includeInvalidCommits: true
@@ -31,7 +31,7 @@ runs:
         useGitmojis: false
         writeToFile: false
     - name: Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
       with:
         body: '${{ steps.changelog.outputs.changes }}'
         files: ${{ inputs.files }}

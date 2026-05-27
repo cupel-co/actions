@@ -95,7 +95,7 @@ runs:
         assembly-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-file-versioning-format: '{Major}.{Minor}.{Patch}'
         assembly-informational-format: '{Major}.{Minor}.{Patch}'
-        tag-prefix: '[vV]?'
+        tag-prefix: v
         commit-message-incrementing: Enabled
         major-version-bump-message: '^(feat|fix|perf|refactor|revert)(\(\w+\))?!:\s.+'
         minor-version-bump-message: '^(feat|revert)(\(\w+\))?:\s.+'
@@ -110,7 +110,6 @@ runs:
           main:
             regex: ^main$
             is-main-branch: true
-            label: ''
             prevent-increment:
               when-branch-merged: false
               of-merged-branch: false

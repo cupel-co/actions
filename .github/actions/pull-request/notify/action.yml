@@ -12,7 +12,7 @@ runs:
   steps:
     - name: Notify
       if: ${{ always() }}
-      uses: SimonScholz/google-chat-action@main
+      uses: SimonScholz/google-chat-action@3b3519e5102dba8aa5046fd711c4b553586409bb
       with:
         webhookUrl: '${{ inputs.google-chat-webhook-url }}'
         title: 'Pull request ${{ github.event.action }}'

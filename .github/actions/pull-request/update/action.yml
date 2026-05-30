@@ -61,9 +61,19 @@ runs:
           echo "$description"
           echo "EOF"
         } >> "$GITHUB_OUTPUT"
-
-    - name: Update Pull Request Description
-      uses: vblagoje/update-pr@07f32e5cf48e494d208b00668f95810935ce4df1
+    - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # use https://github.com/actions/github-script/releases/tag/v9.0.0
+      name: Update Pull Request Description
+      env:
+        PR_BODY: '${{ steps.replace-values.outputs.description }}'
+        INPUT_PR_NUMBER: ${{ github.event.pull_request.number }}
+        CONTEXT_PR_NUMBER: ${{ github.event.number }}
       with:
-        pr-number: ${{ github.event.pull_request.number }}
-        pr-body: '${{ steps.replace-values.outputs.description }}'
+        script: |
+          const body = process.env.PR_BODY;
+          const prNumber = process.env.INPUT_PR_NUMBER || process.env.CONTEXT_PR_NUMBER;                    
+          await github.rest.pulls.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber,
+            body: body
+          });

@@ -29,8 +29,8 @@ runs:
           echo "Issue Title: $title"
           echo "title=$title" >> "$GITHUB_OUTPUT"
         else
-          echo "::error::No issue number found in branch name"
-          exit 1
+          echo "number=Unknown" >> "$GITHUB_OUTPUT"
+          echo "title=Unknown" >> "$GITHUB_OUTPUT"
         fi
       env:
         GH_TOKEN: ${{ github.token }}
